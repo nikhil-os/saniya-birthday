@@ -286,82 +286,37 @@ body {
 .audio-toggle-btn {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  background: rgba(18, 11, 38, 0.75);
-  border: 1px solid rgba(199, 125, 255, 0.35);
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(18, 11, 38, 0.85);
+  border: 1.5px solid rgba(199, 125, 255, 0.45);
   color: #fff;
-  padding: 0.5rem 1.2rem;
-  border-radius: 999px;
-  font-family: var(--font-montserrat);
-  font-size: 0.85rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(123, 44, 191, 0.3);
 }
 
 .audio-toggle-btn:hover {
-  background: rgba(45, 17, 85, 0.85);
-  border-color: var(--theme-glow);
-  box-shadow: 0 0 25px rgba(199, 125, 255, 0.45);
-  transform: translateY(-2px);
-}
-
-/* Vinyl Galaxy Disc Animation */
-.music-disc {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #fff 15%, #2a0845 40%, #110323 100%);
-  border: 1.5px solid var(--theme-glow);
-  position: relative;
-  transition: transform 0.5s linear;
-}
-
-.audio-playing .music-disc {
-  animation: spinDisc 3s linear infinite;
-}
-
-@keyframes spinDisc {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Equalizer sound bars */
-.sound-wave {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 14px;
-}
-
-.sound-wave .bar {
-  width: 3px;
-  background: var(--theme-glow);
-  border-radius: 2px;
-  height: 4px;
-  transition: height 0.2s ease;
-}
-
-.audio-playing .bar-1 { animation: soundWave 0.7s infinite alternate ease-in-out; }
-.audio-playing .bar-2 { animation: soundWave 0.5s infinite alternate ease-in-out 0.2s; }
-.audio-playing .bar-3 { animation: soundWave 0.9s infinite alternate ease-in-out 0.1s; }
-.audio-playing .bar-4 { animation: soundWave 0.6s infinite alternate ease-in-out 0.3s; }
-
-@keyframes soundWave {
-  0% { height: 3px; }
-  100% { height: 14px; background: var(--star-gold); }
+  background: rgba(123, 44, 191, 0.6);
+  border-color: #fff;
+  box-shadow: 0 0 25px rgba(199, 125, 255, 0.6);
+  transform: scale(1.08);
 }
 
 .audio-icon {
-  font-size: 1.05rem;
+  font-size: 1.22rem;
   line-height: 1;
+  display: inline-block;
   transition: transform 0.25s ease;
+  user-select: none;
 }
 
 .audio-playing .audio-icon {
-  transform: scale(1.12);
+  transform: scale(1.1);
 }
 
 
@@ -985,7 +940,6 @@ body {
   justify-content: center;
   gap: 1.8rem;
   width: 100%;
-  position: relative;
 }
 
 /* Glowing Buttons Base - Compact, Refined Sizing */
@@ -1473,28 +1427,14 @@ body {
     letter-spacing: 0.1em;
   }
 
-  .audio-label {
-    display: none;
-  }
-
   .audio-toggle-btn {
-    padding: 0.4rem 0.65rem;
-    gap: 6px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
   }
 
-  .music-disc {
-    width: 24px;
-    height: 24px;
-  }
-
-  .disc-groove {
-    width: 14px;
-    height: 14px;
-  }
-
-  .disc-core {
-    width: 6px;
-    height: 6px;
+  .audio-icon {
+    font-size: 1.15rem;
   }
 
   .solar-stats-grid {

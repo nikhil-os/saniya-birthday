@@ -628,11 +628,16 @@ function renderDOMContent(data, version) {
   // Reset interactive button positions
   const noBtn = document.getElementById('no-btn');
   const yesBtn = document.getElementById('yes-btn');
+  const buttonsContainer = document.getElementById('buttons-container');
   const teaseBubble = document.getElementById('tease-bubble');
   if (noBtn) {
+    if (buttonsContainer && noBtn.parentElement !== buttonsContainer) {
+      buttonsContainer.appendChild(noBtn);
+    }
     noBtn.style.position = '';
     noBtn.style.left = '';
     noBtn.style.top = '';
+    noBtn.style.margin = '';
     noBtn.style.transform = '';
   }
   if (yesBtn) {
@@ -686,6 +691,12 @@ function initInteractiveLoveGame() {
   let lastNoY = null;
 
   function dodgeButton(btn) {
+    // If button is still inside flex row, promote it to direct child of playground
+    // so absolute coordinates strictly match playground bounding box without offset distortion
+    if (btn.parentElement !== playground) {
+      playground.appendChild(btn);
+    }
+
     const pRect = playground.getBoundingClientRect();
     const yRect = yesBtn.getBoundingClientRect();
 
@@ -780,18 +791,28 @@ function initInteractiveLoveGame() {
     lastNoX = bestX;
     lastNoY = bestY;
 
-    // Apply immediate position update with dynamic rotation
+    // Apply immediate position update with dynamic rotation and strict visibility
     btn.style.position = 'absolute';
+    btn.style.margin = '0';
     btn.style.left = `${bestX}px`;
     btn.style.top = `${bestY}px`;
-    btn.style.transform = `rotate(${(Math.random() - 0.5) * 10}deg)`;
+    btn.style.transform = `rotate(${(Math.random() - 0.5) * 8}deg)`;
+    btn.style.zIndex = '30';
+    btn.style.display = 'inline-flex';
+    btn.style.opacity = '1';
+    btn.style.visibility = 'visible';
   }
 
+  let isDodging = false;
   function handleNoDodge(e) {
     if (e) {
-      e.preventDefault();
+      if (e.cancelable) e.preventDefault();
       e.stopPropagation();
     }
+    if (isDodging) return;
+    isDodging = true;
+    setTimeout(() => { isDodging = false; }, 90);
+
     dodgeButton(noBtn);
     const activeData = VERSION_DATA[currentVersion] || VERSION_DATA.sneha;
     const teases = activeData.noTeases;
@@ -810,9 +831,11 @@ function initInteractiveLoveGame() {
     if (e.pointerType === 'mouse') handleNoDodge(e);
   });
 
-  // Instant Touch / Pointer triggers for Mobile: Immediately relocates button on touch
+  // Mobile & Android Touch triggers: Immediate relocation on tap
   noBtn.addEventListener('touchstart', handleNoDodge, { passive: false });
-  noBtn.addEventListener('pointerdown', handleNoDodge, { passive: false });
+  noBtn.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch' || e.pointerType === 'pen') handleNoDodge(e);
+  }, { passive: false });
   noBtn.addEventListener('click', handleNoDodge);
 
   function handleYesHoverOrTouch() {
@@ -845,38 +868,64 @@ function initInteractiveLoveGame() {
 
   yesBtn.addEventListener('click', () => {
     const activeData = VERSION_DATA[currentVersion] || VERSION_DATA.sneha;
-    triggerCosmicSupernova();
+
+    // Unmute & play song on YES button click
+    if (typeof window.unmuteAndPlayBgMusic === 'function') {
+      window.unmuteAndPlayBgMusic();
+    } else {
+      const bgAudio = document.getElementById('bg-audio');
+      if (bgAudio) {
+        bgAudio.muted = false;
+        bgAudio.play().catch(() => {});
+      }
+    }
+
+    try {
+      triggerCosmicSupernova();
+    } catch (e) {
+      console.warn('Supernova trigger notice:', e);
+    }
+
     if (statusHint) statusHint.textContent = activeData.yesSuccessHint;
     showTease(activeData.yesSuccessTease);
     
+    // Reliably open the letter modal after fireworks launch
     setTimeout(() => {
       openLetterModal();
-    }, 1800);
+    }, 1200);
   });
 
   function openLetterModal() {
-    if (letterModal) letterModal.classList.add('open');
+    const overlay = document.getElementById('supernova-overlay');
+    if (overlay) overlay.classList.remove('active');
+    if (letterModal) {
+      letterModal.classList.add('open');
+      letterModal.style.display = 'flex';
+    }
+  }
+
+  function closeLetterModal() {
+    if (letterModal) {
+      letterModal.classList.remove('open');
+      letterModal.style.display = '';
+    }
   }
 
   if (closeModalBtn) {
-    closeModalBtn.addEventListener('click', () => {
-      if (letterModal) letterModal.classList.remove('open');
-    });
+    closeModalBtn.addEventListener('click', closeLetterModal);
   }
 
   if (letterModal) {
     letterModal.addEventListener('click', (e) => {
-      if (e.target === letterModal) {
-        letterModal.classList.remove('open');
-      }
+      if (e.target === letterModal) closeLetterModal();
     });
   }
 
   if (replayBtn) {
     replayBtn.addEventListener('click', () => {
-      if (letterModal) letterModal.classList.remove('open');
+      closeLetterModal();
       triggerCosmicSupernova();
-      setTimeout(openLetterModal, 2200);
+      setTimeout(openLetterModal, 1800);
     });
   }
 }
@@ -1260,33 +1309,50 @@ function initCosmicCanvas() {
 /* ==========================================================
    10. BACKGROUND AUDIO ENGINE (SENORITA ON LOOP - MUTE/UNMUTE ONLY)
    ========================================================== */
+let audioCtx = null;
+
 function initAmbientAudio() {
   const bgAudio = document.getElementById('bg-audio');
   const toggleBtn = document.getElementById('audio-toggle');
   const audioIcon = document.getElementById('audio-icon');
-  const statusText = document.getElementById('audio-status-text');
   if (!bgAudio || !toggleBtn) return;
 
   bgAudio.loop = true;
   bgAudio.volume = 0.75;
 
-  const isMutedPref = localStorage.getItem('saniya_music_muted') === 'true';
-
   function updateAudioUI(isPlaying) {
     if (isPlaying) {
       document.body.classList.add('audio-playing');
       if (audioIcon) audioIcon.textContent = '🔊';
-      if (statusText) statusText.textContent = 'Mute';
       toggleBtn.setAttribute('title', 'Mute background music');
       toggleBtn.setAttribute('aria-label', 'Mute background music');
     } else {
       document.body.classList.remove('audio-playing');
       if (audioIcon) audioIcon.textContent = '🔇';
-      if (statusText) statusText.textContent = 'Unmute';
       toggleBtn.setAttribute('title', 'Unmute background music');
       toggleBtn.setAttribute('aria-label', 'Unmute background music');
     }
   }
+
+  // Global methods for unmuting / muting
+  window.unmuteAndPlayBgMusic = function() {
+    bgAudio.muted = false;
+    bgAudio.play().then(() => {
+      localStorage.setItem('saniya_music_muted', 'false');
+      updateAudioUI(true);
+    }).catch(err => {
+      console.warn('Playback notice:', err);
+    });
+  };
+
+  window.muteBgMusic = function() {
+    bgAudio.muted = true;
+    bgAudio.pause();
+    localStorage.setItem('saniya_music_muted', 'true');
+    updateAudioUI(false);
+  };
+
+  const isMutedPref = localStorage.getItem('saniya_music_muted') === 'true';
 
   // Attempt auto-play if user has not explicitly muted
   if (!isMutedPref) {
@@ -1296,13 +1362,11 @@ function initAmbientAudio() {
       playPromise.then(() => {
         updateAudioUI(true);
       }).catch(() => {
-        // Autoplay blocked by browser policy: play on first interaction anywhere
+        // Autoplay blocked by browser policy: play on first user interaction anywhere
         updateAudioUI(false);
         const startOnFirstGesture = () => {
           if (localStorage.getItem('saniya_music_muted') !== 'true') {
-            bgAudio.play().then(() => {
-              updateAudioUI(true);
-            }).catch(() => {});
+            window.unmuteAndPlayBgMusic();
           }
           window.removeEventListener('click', startOnFirstGesture);
           window.removeEventListener('touchstart', startOnFirstGesture);
@@ -1318,52 +1382,51 @@ function initAmbientAudio() {
     updateAudioUI(false);
   }
 
-  // Pure Mute / Unmute Button Toggle
+  // Pure Mute / Unmute Button Toggle (Only the sound symbol)
   toggleBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     if (bgAudio.paused || bgAudio.muted) {
-      bgAudio.muted = false;
-      bgAudio.play().then(() => {
-        localStorage.setItem('saniya_music_muted', 'false');
-        updateAudioUI(true);
-      }).catch(err => {
-        console.warn('Playback blocked:', err);
-      });
+      window.unmuteAndPlayBgMusic();
     } else {
-      bgAudio.muted = true;
-      bgAudio.pause();
-      localStorage.setItem('saniya_music_muted', 'true');
-      updateAudioUI(false);
+      window.muteBgMusic();
     }
   });
 }
 
 function playSupernovaSound() {
-  if (!audioCtx) {
+  try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContext();
+    if (!AudioContext) return;
+    if (!audioCtx) {
+      audioCtx = new AudioContext();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    const chords = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+    chords.forEach((freq, idx) => {
+      setTimeout(() => {
+        try {
+          if (!audioCtx || audioCtx.state !== 'running') return;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+          const now = audioCtx.currentTime;
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.08, now + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 2.6);
+        } catch (e) {}
+      }, idx * 120);
+    });
+  } catch (err) {
+    console.warn('Supernova audio notice:', err);
   }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-
-  const chords = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-  chords.forEach((freq, idx) => {
-    setTimeout(() => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-      const now = audioCtx.currentTime;
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(0.08, now + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + 2.6);
-    }, idx * 120);
-  });
 }
