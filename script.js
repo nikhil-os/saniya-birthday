@@ -5,9 +5,11 @@
  * Playful Irritating Buttons, and Supernova Fireworks
  */
 
+const DEFAULT_GALLERY_PASSCODE = '945060';
+const DEFAULT_DANGER_VAULT_PASSCODE = '953268';
 let currentVersion = 'sneha'; // Default landing: Safe / Normal Birthday Wishes (👧)
-let galleryPasscode = '';
-let dangerVaultPasscode = '';
+let galleryPasscode = DEFAULT_GALLERY_PASSCODE;
+let dangerVaultPasscode = DEFAULT_DANGER_VAULT_PASSCODE;
 let isDangerUnlocked = false;
 
 // ==========================================================
@@ -246,36 +248,32 @@ function loadVaultFromURL() {
 async function loadVaultState() {
   loadVaultFromURL();
   const savedGalleryPass = localStorage.getItem('saniya_gallery_passcode');
-  if (savedGalleryPass) galleryPasscode = savedGalleryPass;
+  if (savedGalleryPass && savedGalleryPass.length === 6) galleryPasscode = savedGalleryPass;
 
   const savedDangerPass = localStorage.getItem('saniya_danger_vault_passcode');
-  if (savedDangerPass) dangerVaultPasscode = savedDangerPass;
+  if (savedDangerPass && savedDangerPass.length === 6) dangerVaultPasscode = savedDangerPass;
 
   try {
     const resp = await fetch('vault_config.json', { cache: 'no-store' });
     if (resp.ok) {
       const data = await resp.json();
-      if (data.gallery_passcode !== undefined) {
+      if (data.gallery_passcode && data.gallery_passcode.length === 6) {
         galleryPasscode = data.gallery_passcode;
-        if (galleryPasscode) {
-          localStorage.setItem('saniya_gallery_passcode', galleryPasscode);
-        } else {
-          localStorage.removeItem('saniya_gallery_passcode');
-        }
       }
-      if (data.danger_vault_passcode !== undefined) {
+      if (data.danger_vault_passcode && data.danger_vault_passcode.length === 6) {
         dangerVaultPasscode = data.danger_vault_passcode;
-        if (dangerVaultPasscode) {
-          localStorage.setItem('saniya_danger_vault_passcode', dangerVaultPasscode);
-        } else {
-          localStorage.removeItem('saniya_danger_vault_passcode');
-        }
-      } else if (data.passcode) {
+      } else if (data.passcode && data.passcode.length === 6) {
         dangerVaultPasscode = data.passcode;
-        localStorage.setItem('saniya_danger_vault_passcode', dangerVaultPasscode);
       }
     }
   } catch (e) {}
+
+  if (!galleryPasscode || galleryPasscode.length !== 6) {
+    galleryPasscode = DEFAULT_GALLERY_PASSCODE;
+  }
+  if (!dangerVaultPasscode || dangerVaultPasscode.length !== 6) {
+    dangerVaultPasscode = DEFAULT_DANGER_VAULT_PASSCODE;
+  }
 }
 
 async function saveVaultConfigToStorageAndBackend() {
@@ -336,11 +334,7 @@ function initGalleryLinkInterceptor() {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       // Always ask for Gallery PIN every time user opens gallery!
-      if (!galleryPasscode || galleryPasscode.length !== 6) {
-        openPasscodeModal('gallery', 'setup');
-      } else {
-        openPasscodeModal('gallery', 'verify');
-      }
+      openPasscodeModal('gallery', 'verify');
     });
   });
 }
@@ -380,30 +374,16 @@ function openPasscodeModal(action, mode) {
   if (errorMsg) errorMsg.textContent = '';
 
   if (action === 'gallery') {
-    if (mode === 'setup') {
-      if (stamp) stamp.textContent = '🪐 COSMIC GALLERY SETUP';
-      if (title) title.textContent = 'Setup Gallery 6-Digit PIN';
-      if (desc) desc.textContent = 'Create a unique 6-digit passcode to protect the Cosmic Memories Gallery. (This PIN is separate from the Danger Zone PIN)';
-      if (submitBtn) submitBtn.textContent = '✨ Set PIN & Open Gallery 🪐 ✨';
-    } else {
-      if (stamp) stamp.textContent = '🪐 COSMIC MEMORIES LOCK';
-      if (title) title.textContent = 'Enter Gallery 6-Digit PIN';
-      if (desc) desc.textContent = 'Enter your 6-digit Gallery PIN to view our cosmic memories.';
-      if (submitBtn) submitBtn.textContent = '✨ Unlock & Open Gallery 🪐 ✨';
-    }
+    if (stamp) stamp.textContent = '🪐 COSMIC MEMORIES LOCK';
+    if (title) title.textContent = 'Enter Gallery 6-Digit PIN';
+    if (desc) desc.textContent = 'Enter your 6-digit Gallery PIN to view our cosmic memories.';
+    if (submitBtn) submitBtn.textContent = '✨ Unlock & Open Gallery 🪐 ✨';
   } else {
     // Danger Zone
-    if (mode === 'setup') {
-      if (stamp) stamp.textContent = '⚠️ DANGER ZONE & SECRET VAULT SETUP';
-      if (title) title.textContent = 'Setup Danger Zone PIN';
-      if (desc) desc.textContent = 'Create your secret 6-digit passcode for Danger Zone & Secret Vault. (This same PIN is used in the Hidden Gallery)';
-      if (submitBtn) submitBtn.textContent = '🔒 Save PIN & Unlock Danger Mode ⚠️';
-    } else {
-      if (stamp) stamp.textContent = '🔒 PROTECTED DANGER MODE';
-      if (title) title.textContent = 'Enter Danger Zone PIN';
-      if (desc) desc.textContent = 'Enter your 6-digit PIN for Danger Zone (Nikhil\'s Screen) & Secret Vault.';
-      if (submitBtn) submitBtn.textContent = '✨ Unlock Danger Mode ⚠️ ✨';
-    }
+    if (stamp) stamp.textContent = '🔒 PROTECTED DANGER MODE';
+    if (title) title.textContent = 'Enter Danger Zone PIN';
+    if (desc) desc.textContent = 'Enter your 6-digit PIN for Danger Zone (Nikhil\'s Screen) & Secret Vault.';
+    if (submitBtn) submitBtn.textContent = '✨ Unlock Danger Mode ⚠️ ✨';
   }
 
   modal.classList.add('open');
@@ -480,58 +460,30 @@ function initPasscodeModal() {
     }
 
     if (passcodeModalAction === 'gallery') {
-      // Logic for COSMIC GALLERY PIN
-      if (passcodeModalMode === 'setup') {
-        if (dangerVaultPasscode && pin === dangerVaultPasscode) {
-          showPinError('Please choose a DIFFERENT PIN than Danger Zone! Both locks must have separate passcodes.');
-          return;
-        }
-        galleryPasscode = pin;
-        await saveVaultConfigToStorageAndBackend();
+      // Logic for COSMIC GALLERY PIN (945060)
+      if (pin === dangerVaultPasscode && pin !== galleryPasscode) {
+        showPinError('Incorrect PIN! That is the Danger Zone PIN. Cosmic Memories Gallery has a separate PIN.');
+      } else if (pin === galleryPasscode) {
         sessionStorage.setItem('saniya_gallery_single_use', 'valid');
         closePasscodeModal();
-        showToast('✨ Gallery PIN created! Opening Cosmic Memories... 🪐');
+        showToast('✨ Gallery Unlocked! Opening Cosmic Memories... 🪐');
         setTimeout(() => {
           window.location.href = getGalleryUrlWithHash();
         }, 300);
       } else {
-        if (pin === dangerVaultPasscode && pin !== galleryPasscode) {
-          showPinError('Incorrect PIN! That is the Danger Zone PIN. Cosmic Memories Gallery has a separate PIN.');
-        } else if (pin === galleryPasscode) {
-          sessionStorage.setItem('saniya_gallery_single_use', 'valid');
-          closePasscodeModal();
-          showToast('✨ Gallery Unlocked! Opening Cosmic Memories... 🪐');
-          setTimeout(() => {
-            window.location.href = getGalleryUrlWithHash();
-          }, 300);
-        } else {
-          showPinError('Incorrect 6-digit Gallery PIN. Access denied 🚫');
-        }
+        showPinError('Incorrect 6-digit Gallery PIN. Access denied 🚫');
       }
     } else {
-      // Logic for DANGER ZONE & SECRET VAULT PIN
-      if (passcodeModalMode === 'setup') {
-        if (galleryPasscode && pin === galleryPasscode) {
-          showPinError('Please choose a DIFFERENT PIN than Gallery PIN! Both locks must have separate passcodes.');
-          return;
-        }
-        dangerVaultPasscode = pin;
-        await saveVaultConfigToStorageAndBackend();
+      // Logic for DANGER ZONE & SECRET VAULT PIN (953268)
+      if (pin === galleryPasscode && pin !== dangerVaultPasscode) {
+        showPinError('Incorrect PIN! That is the Cosmic Gallery PIN. Danger Zone requires the Secret Vault PIN.');
+      } else if (pin === dangerVaultPasscode) {
         isDangerUnlocked = true;
         closePasscodeModal();
-        showToast('🔐 Danger PIN created! Danger mode unlocked ⚠️');
+        showToast('✨ Passcode verified! Danger mode unlocked ⚠️');
         switchVersion('nikhil');
       } else {
-        if (pin === galleryPasscode && pin !== dangerVaultPasscode) {
-          showPinError('Incorrect PIN! That is the Cosmic Gallery PIN. Danger Zone requires the Secret Vault PIN.');
-        } else if (pin === dangerVaultPasscode) {
-          isDangerUnlocked = true;
-          closePasscodeModal();
-          showToast('✨ Passcode verified! Danger mode unlocked ⚠️');
-          switchVersion('nikhil');
-        } else {
-          showPinError('Incorrect 6-digit Danger PIN. Access denied 🚫');
-        }
+        showPinError('Incorrect 6-digit Danger PIN. Access denied 🚫');
       }
     }
   }
@@ -591,14 +543,7 @@ function handleDangerModeRequest() {
     switchVersion('nikhil');
     return;
   }
-
-  if (!dangerVaultPasscode || dangerVaultPasscode.length !== 6) {
-    // First time entering Danger Mode: Ask to setup 6-digit passcode
-    openPasscodeModal('danger', 'setup');
-  } else {
-    // Passcode exists: Ask to enter 6-digit passcode
-    openPasscodeModal('danger', 'verify');
-  }
+  openPasscodeModal('danger', 'verify');
 }
 
 function switchVersion(newVersion) {

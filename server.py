@@ -74,7 +74,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
 
         # 2. Vault config GET
         if parsed.path == '/api/vault-config':
-            data = {"gallery_passcode": "", "danger_vault_passcode": "", "hidden_ids": []}
+            data = {"gallery_passcode": "945060", "danger_vault_passcode": "953268", "hidden_ids": []}
             if os.path.exists(VAULT_FILE):
                 try:
                     with open(VAULT_FILE, 'r', encoding='utf-8') as f:
