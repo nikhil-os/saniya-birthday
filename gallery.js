@@ -296,8 +296,6 @@ function initDropdownMenu() {
   const hideSelectedBtn = document.getElementById('menu-hide-selected-btn');
   const unhideSelectedBtn = document.getElementById('menu-unhide-selected-btn');
   const selectAllBtn = document.getElementById('menu-select-all-btn');
-  const shareBtn = document.getElementById('menu-share-btn');
-  const refreshBtn = document.getElementById('menu-refresh-btn');
   const exitVaultBtn = document.getElementById('menu-exit-vault-btn');
 
   threeDotsBtn.addEventListener('click', (e) => {
@@ -334,23 +332,6 @@ function initDropdownMenu() {
     const currentList = getVisibleMediaList();
     currentList.forEach(m => selectedIds.add(m.public_id));
     updateSelectionUI();
-  });
-
-  shareBtn.addEventListener('click', () => {
-    dropdownMenu.classList.remove('show');
-    saveVaultState();
-    const shareUrl = window.location.href;
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      showToast('🔗 Cross-device link copied! Open on any phone or laptop.');
-    }).catch(() => {
-      prompt('Copy this link to open on any device with exact same hidden media:', shareUrl);
-    });
-  });
-
-  refreshBtn.addEventListener('click', () => {
-    dropdownMenu.classList.remove('show');
-    loadMedia();
-    showToast('🔄 Refreshing media from Cloudinary...');
   });
 
   exitVaultBtn.addEventListener('click', () => {
