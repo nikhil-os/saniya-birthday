@@ -74,11 +74,12 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
 
         # 2. Vault config GET
         if parsed.path == '/api/vault-config':
-            data = {"passcode": "", "hidden_ids": []}
+            data = {"gallery_passcode": "", "danger_vault_passcode": "", "hidden_ids": []}
             if os.path.exists(VAULT_FILE):
                 try:
                     with open(VAULT_FILE, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
+                        file_data = json.load(f)
+                        data.update(file_data)
                 except Exception:
                     pass
             self.send_response(200)

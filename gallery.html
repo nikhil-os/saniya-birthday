@@ -180,7 +180,43 @@
   </div>
 
   <!-- ==========================================================
-       6-DIGIT PASSCODE SETUP & UNLOCK MODAL
+       6-DIGIT COSMIC GALLERY ACCESS GATE (FIRST PASSCODE)
+       ========================================================== -->
+  <div class="modal-backdrop" id="gallery-lock-modal">
+    <div class="love-letter-card passcode-card">
+      <div class="letter-stamp">
+        <span id="gallery-lock-stamp">🪐 COSMIC MEMORIES LOCK</span>
+      </div>
+
+      <h2 class="letter-title" id="gallery-lock-title">Enter Gallery PIN</h2>
+      <p class="config-desc" id="gallery-lock-desc">
+        Enter your 6-digit passcode to unlock the Cosmic Memories Gallery.
+      </p>
+
+      <div class="pin-inputs-row" id="gallery-pin-inputs-row">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit gallery-pin-digit" data-index="0" autofocus>
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit gallery-pin-digit" data-index="1">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit gallery-pin-digit" data-index="2">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit gallery-pin-digit" data-index="3">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit gallery-pin-digit" data-index="4">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit gallery-pin-digit" data-index="5">
+      </div>
+
+      <div class="pin-error-msg" id="gallery-pin-error-msg"></div>
+
+      <div class="form-actions" style="margin-top: 1.8rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
+        <a href="index.html" class="glow-btn no-btn" style="text-decoration: none; padding: 0.7rem 1.4rem; font-size: 0.9rem;">
+          🏠 Back to Home
+        </a>
+        <button type="button" class="glow-btn yes-btn" id="gallery-submit-pin-btn">
+          ✨ Unlock Gallery 🪐 ✨
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       6-DIGIT PASSCODE SETUP & UNLOCK MODAL (DANGER ZONE & SECRET VAULT - SECOND PASSCODE)
        ========================================================== -->
   <div class="modal-backdrop" id="passcode-modal">
     <div class="love-letter-card passcode-card">
