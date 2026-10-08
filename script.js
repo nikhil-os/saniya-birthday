@@ -62,7 +62,7 @@ const VERSION_DATA = {
     quizTitle: "One Crucial Bestie Question...",
     quizQuestion: `"Do you love your bestie Sneha? 🌸👯‍♀️"`,
     quizHint: "Careful girl... your favorite gossip partner is watching very closely!",
-    yesBtnText: "YES, OBVIOUSLY! Bestie Forever!",
+    yesBtnText: "YES! Bestie Forever! 🌸",
     noBtnText: "NOPE 😜",
     noTeases: [
       "Haww! Bestie ko 'NO'?! Ye option toh completely illegal hai! 😂",
@@ -710,17 +710,19 @@ function initInteractiveLoveGame() {
       height: yRect.height
     };
 
-    const btnW = btn.offsetWidth || 90;
-    const btnH = btn.offsetHeight || 38;
+    const btnW = btn.offsetWidth || 85;
+    const btnH = btn.offsetHeight || 36;
 
-    const pad = 12; // boundary padding from container edges
+    // Safety padding from playground boundary (prevent edge cutting on phone screen)
+    const pad = 16;
     const minX = pad;
-    const maxX = Math.max(pad, pRect.width - btnW - pad);
+    const maxX = Math.max(pad, Math.floor(pRect.width - btnW - pad));
     const minY = pad;
-    const maxY = Math.max(pad, pRect.height - btnH - pad);
+    const maxY = Math.max(pad, Math.floor(pRect.height - btnH - pad));
 
-    // Forbidden rectangle around YES button with 28px safety clearance
-    const clearance = 28;
+    // STRICT FORBIDDEN ZONE AROUND YES BUTTON:
+    // With 26px guaranteed clearance, NO BUTTON CAN NEVER TOUCH OR OVERLAY YES BUTTON!
+    const clearance = 26;
     const forbidden = {
       left: yesRel.left - btnW - clearance,
       right: yesRel.right + clearance,
@@ -728,75 +730,71 @@ function initInteractiveLoveGame() {
       bottom: yesRel.bottom + clearance
     };
 
+    function isSafe(x, y) {
+      if (x < minX || x > maxX || y < minY || y > maxY) return false;
+      const overlaps = (
+        x < forbidden.right &&
+        x + btnW > forbidden.left &&
+        y < forbidden.bottom &&
+        y + btnH > forbidden.top
+      );
+      return !overlaps;
+    }
+
     let bestX = null;
     let bestY = null;
 
-    // Try up to 60 random positions outside the forbidden zone
-    for (let attempt = 0; attempt < 60; attempt++) {
-      const candX = minX + Math.random() * (maxX - minX);
-      const candY = minY + Math.random() * (maxY - minY);
+    // Try up to 80 random safe positions
+    for (let attempt = 0; attempt < 80; attempt++) {
+      const candX = Math.round(minX + Math.random() * (maxX - minX));
+      const candY = Math.round(minY + Math.random() * (maxY - minY));
 
-      // Check collision with YES button's safety rectangle
-      const overlapsYes = (
-        candX < forbidden.right &&
-        candX + btnW > forbidden.left &&
-        candY < forbidden.bottom &&
-        candY + btnH > forbidden.top
-      );
-
-      if (!overlapsYes) {
+      if (isSafe(candX, candY)) {
         if (lastNoX !== null && lastNoY !== null) {
           const dist = Math.hypot(candX - lastNoX, candY - lastNoY);
-          if (dist < 55) continue; // Ensure it hops noticeably to a new spot
+          if (dist < 45) continue; // Ensure it hops noticeably
         }
-        bestX = Math.round(candX);
-        bestY = Math.round(candY);
+        bestX = candX;
+        bestY = candY;
         break;
       }
     }
 
-    // Fallback safe discrete zones if random attempts didn't find clear space
+    // Deterministic fallback zones (top, bottom, and quadrant corners)
     if (bestX === null || bestY === null) {
-      const fallbackZones = [
+      const candidates = [
         { x: minX, y: minY },
         { x: maxX, y: minY },
         { x: minX, y: maxY },
         { x: maxX, y: maxY },
-        { x: minX, y: Math.max(minY, Math.min(maxY, (minY + maxY) / 2)) },
-        { x: maxX, y: Math.max(minY, Math.min(maxY, (minY + maxY) / 2)) }
+        { x: Math.round((minX + maxX) / 2), y: minY },
+        { x: Math.round((minX + maxX) / 2), y: maxY },
+        { x: minX, y: Math.round((minY + maxY) / 2) },
+        { x: maxX, y: Math.round((minY + maxY) / 2) }
       ];
 
-      // Filter out any zone that intersects YES button
-      const safeZones = fallbackZones.filter(z => {
-        return !(
-          z.x < forbidden.right &&
-          z.x + btnW > forbidden.left &&
-          z.y < forbidden.bottom &&
-          z.y + btnH > forbidden.top
-        );
-      });
+      const safePool = candidates.filter(c => isSafe(c.x, c.y));
+      const pool = safePool.length > 0 ? safePool : candidates;
 
-      const pool = safeZones.length > 0 ? safeZones : fallbackZones;
-      // Pick zone farthest from current position
       pool.sort((a, b) => {
         const distA = lastNoX !== null ? Math.hypot(a.x - lastNoX, a.y - lastNoY) : 0;
         const distB = lastNoX !== null ? Math.hypot(b.x - lastNoX, b.y - lastNoY) : 0;
         return distB - distA;
       });
 
-      bestX = Math.round(pool[0].x);
-      bestY = Math.round(pool[0].y);
+      bestX = pool[0].x;
+      bestY = pool[0].y;
     }
 
     lastNoX = bestX;
     lastNoY = bestY;
 
-    // Apply immediate position update with dynamic rotation and strict visibility
+    // Apply clamped coordinates without edge cutting or collision
     btn.style.position = 'absolute';
     btn.style.margin = '0';
     btn.style.left = `${bestX}px`;
     btn.style.top = `${bestY}px`;
-    btn.style.transform = `rotate(${(Math.random() - 0.5) * 8}deg)`;
+    btn.style.transform = `rotate(${(Math.random() - 0.5) * 6}deg)`;
     btn.style.zIndex = '30';
     btn.style.display = 'inline-flex';
     btn.style.opacity = '1';

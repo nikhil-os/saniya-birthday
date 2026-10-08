@@ -938,8 +938,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.8rem;
+  gap: 1.2rem;
   width: 100%;
+  max-width: 100%;
+  flex-wrap: wrap;
 }
 
 /* Glowing Buttons Base - Compact, Refined Sizing */
@@ -948,10 +950,10 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 0.72rem 1.6rem;
+  padding: 0.65rem 1.4rem;
   border-radius: 999px;
   font-family: var(--font-cinzel);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   cursor: pointer;
@@ -959,7 +961,8 @@ body {
   text-transform: uppercase;
   user-select: none;
   position: relative;
-  white-space: nowrap;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 /* YES BUTTON: Radiantly Glowing */
@@ -967,8 +970,11 @@ body {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(224, 170, 255, 0.9) 100%);
   color: #120424;
   border: 2px solid #ffffff;
-  padding: 0.75rem 1.8rem;
-  font-size: 0.96rem;
+  padding: 0.68rem 1.5rem;
+  font-size: 0.92rem;
+  max-width: min(90vw, 360px);
+  text-align: center;
+  white-space: normal;
   box-shadow: 
     0 0 18px rgba(255, 255, 255, 0.5),
     0 0 35px rgba(199, 125, 255, 0.4);
@@ -1478,16 +1484,49 @@ body {
     font-size: 0.82rem;
   }
 
+  .interactive-quiz-section {
+    scroll-margin-top: 70px;
+    padding: 1.8rem 0.9rem;
+  }
+
   .buttons-row {
+    display: flex;
     flex-direction: row;
-    gap: 0.8rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     justify-content: center;
+    width: 100%;
+    max-width: 100%;
   }
 
   .button-playground {
-    min-height: 250px;
-    padding: 1.4rem 0.5rem;
-    border-radius: 14px;
+    min-height: 290px;
+    padding: 1.5rem 0.65rem;
+    border-radius: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .glow-btn {
+    padding: 0.58rem 1.1rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    box-sizing: border-box;
+  }
+
+  .yes-btn {
+    padding: 0.62rem 1.2rem;
+    font-size: 0.82rem;
+    max-width: calc(100% - 8px);
+    text-align: center;
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  .no-btn {
+    padding: 0.58rem 1.1rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
   }
 
   .tease-bubble {
@@ -1560,9 +1599,24 @@ body {
     gap: 5px;
   }
 
+  .button-playground {
+    min-height: 300px;
+    padding: 1.2rem 0.4rem;
+  }
+
   .glow-btn {
-    padding: 0.52rem 0.95rem;
-    font-size: 0.78rem;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.75rem;
+  }
+
+  .yes-btn {
+    padding: 0.55rem 0.95rem;
+    font-size: 0.76rem;
+  }
+
+  .no-btn {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.75rem;
   }
 }
 
