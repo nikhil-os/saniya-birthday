@@ -48,7 +48,20 @@
       </span>
     </div>
 
+    <!-- Background Audio Loop (Senorita) -->
+    <audio id="bg-audio" loop preload="auto">
+      <source src="assets/bg_music.mp3" type="audio/mpeg">
+      <source src="bg_music.mp3" type="audio/mpeg">
+      <source src="Senorita Ringtone Download.mp3.mpeg" type="audio/mpeg">
+    </audio>
+
     <div class="nav-right">
+      <!-- Mute / Unmute Button -->
+      <button class="nav-btn audio-toggle-btn" id="gallery-audio-toggle" title="Mute / Unmute Music">
+        <span class="audio-icon" id="gallery-audio-icon">🔊</span>
+        <span class="btn-text" id="gallery-audio-text">Mute</span>
+      </button>
+
       <!-- Select Mode Toggle Button -->
       <button class="nav-btn select-mode-btn" id="toggle-select-btn" title="Select multiple items">
         <span class="btn-icon">✓</span>

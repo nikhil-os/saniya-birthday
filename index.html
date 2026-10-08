@@ -50,27 +50,25 @@
       </button>
     </div>
 
-    <!-- Audio Player Floating Widget -->
+    <!-- Background Audio Loop (Senorita) -->
+    <audio id="bg-audio" loop preload="auto">
+      <source src="assets/bg_music.mp3" type="audio/mpeg">
+      <source src="bg_music.mp3" type="audio/mpeg">
+      <source src="Senorita Ringtone Download.mp3.mpeg" type="audio/mpeg">
+    </audio>
+
+    <!-- Mute / Unmute Audio Button Only -->
     <div class="audio-widget" id="audio-widget">
-      <button class="audio-toggle-btn" id="audio-toggle" aria-label="Toggle ambient celestial music" title="Toggle Celestial Sound">
-        <div class="music-disc" id="music-disc">
-          <span class="disc-core"></span>
-          <span class="disc-groove"></span>
-        </div>
+      <button class="audio-toggle-btn" id="audio-toggle" aria-label="Mute or Unmute Music" title="Mute / Unmute Music">
+        <span class="audio-icon" id="audio-icon">🔊</span>
         <div class="sound-wave" id="sound-wave">
           <span class="bar bar-1"></span>
           <span class="bar bar-2"></span>
           <span class="bar bar-3"></span>
           <span class="bar bar-4"></span>
         </div>
-        <span class="audio-label" id="audio-status-text">Play Soft Music 🎵</span>
+        <span class="audio-label" id="audio-status-text">Mute</span>
       </button>
-      
-      <!-- Optional Local File Upload for Custom Song -->
-      <label class="custom-music-label" title="Upload your own song">
-        <input type="file" id="custom-music-input" accept="audio/*" style="display:none;">
-        <span class="upload-icon">♪+</span>
-      </label>
     </div>
   </header>
 

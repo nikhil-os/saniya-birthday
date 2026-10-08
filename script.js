@@ -1258,128 +1258,84 @@ function initCosmicCanvas() {
 }
 
 /* ==========================================================
-   10. AMBIENT AUDIO SYNTHESIZER
+   10. BACKGROUND AUDIO ENGINE (SENORITA ON LOOP - MUTE/UNMUTE ONLY)
    ========================================================== */
-let audioCtx = null;
-let isAudioPlaying = false;
-let chordInterval = null;
-let currentCustomAudio = null;
-
 function initAmbientAudio() {
+  const bgAudio = document.getElementById('bg-audio');
   const toggleBtn = document.getElementById('audio-toggle');
+  const audioIcon = document.getElementById('audio-icon');
   const statusText = document.getElementById('audio-status-text');
-  const fileInput = document.getElementById('custom-music-input');
-  if (!toggleBtn) return;
+  if (!bgAudio || !toggleBtn) return;
 
-  function setPlayingState(playing) {
-    isAudioPlaying = playing;
-    if (playing) {
+  bgAudio.loop = true;
+  bgAudio.volume = 0.75;
+
+  const isMutedPref = localStorage.getItem('saniya_music_muted') === 'true';
+
+  function updateAudioUI(isPlaying) {
+    if (isPlaying) {
       document.body.classList.add('audio-playing');
-      if (statusText) statusText.textContent = "Sound: Playing ✨";
+      if (audioIcon) audioIcon.textContent = '🔊';
+      if (statusText) statusText.textContent = 'Mute';
+      toggleBtn.setAttribute('title', 'Mute background music');
+      toggleBtn.setAttribute('aria-label', 'Mute background music');
     } else {
       document.body.classList.remove('audio-playing');
-      if (statusText) statusText.textContent = "Play Soft Music 🎵";
+      if (audioIcon) audioIcon.textContent = '🔇';
+      if (statusText) statusText.textContent = 'Unmute';
+      toggleBtn.setAttribute('title', 'Unmute background music');
+      toggleBtn.setAttribute('aria-label', 'Unmute background music');
     }
   }
 
-  toggleBtn.addEventListener('click', () => {
-    if (currentCustomAudio) {
-      if (currentCustomAudio.paused) {
-        currentCustomAudio.play();
-        setPlayingState(true);
-      } else {
-        currentCustomAudio.pause();
-        setPlayingState(false);
-      }
-      return;
+  // Attempt auto-play if user has not explicitly muted
+  if (!isMutedPref) {
+    bgAudio.muted = false;
+    const playPromise = bgAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        updateAudioUI(true);
+      }).catch(() => {
+        // Autoplay blocked by browser policy: play on first interaction anywhere
+        updateAudioUI(false);
+        const startOnFirstGesture = () => {
+          if (localStorage.getItem('saniya_music_muted') !== 'true') {
+            bgAudio.play().then(() => {
+              updateAudioUI(true);
+            }).catch(() => {});
+          }
+          window.removeEventListener('click', startOnFirstGesture);
+          window.removeEventListener('touchstart', startOnFirstGesture);
+          window.removeEventListener('scroll', startOnFirstGesture);
+        };
+        window.addEventListener('click', startOnFirstGesture, { once: true });
+        window.addEventListener('touchstart', startOnFirstGesture, { once: true });
+        window.addEventListener('scroll', startOnFirstGesture, { once: true });
+      });
     }
+  } else {
+    bgAudio.muted = true;
+    updateAudioUI(false);
+  }
 
-    if (!isAudioPlaying) {
-      startAmbientSynth();
-      setPlayingState(true);
+  // Pure Mute / Unmute Button Toggle
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (bgAudio.paused || bgAudio.muted) {
+      bgAudio.muted = false;
+      bgAudio.play().then(() => {
+        localStorage.setItem('saniya_music_muted', 'false');
+        updateAudioUI(true);
+      }).catch(err => {
+        console.warn('Playback blocked:', err);
+      });
     } else {
-      stopAmbientSynth();
-      setPlayingState(false);
+      bgAudio.muted = true;
+      bgAudio.pause();
+      localStorage.setItem('saniya_music_muted', 'true');
+      updateAudioUI(false);
     }
   });
-
-  if (fileInput) {
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        stopAmbientSynth();
-        if (currentCustomAudio) {
-          currentCustomAudio.pause();
-          currentCustomAudio = null;
-        }
-
-        const fileURL = URL.createObjectURL(file);
-        currentCustomAudio = new Audio(fileURL);
-        currentCustomAudio.loop = true;
-        currentCustomAudio.play().then(() => {
-          setPlayingState(true);
-          if (statusText) statusText.textContent = "Song: Playing 🎶";
-        }).catch(() => {
-          setPlayingState(false);
-        });
-      }
-    });
-  }
-}
-
-function startAmbientSynth() {
-  if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContext();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-
-  const chords = [
-    [261.63, 329.63, 392.00, 493.88],
-    [220.00, 261.63, 329.63, 392.00],
-    [174.61, 220.00, 261.63, 329.63],
-    [196.00, 246.94, 293.66, 392.00]
-  ];
-
-  let currentChordIndex = 0;
-
-  function playChord(chordFreqs) {
-    if (!audioCtx || audioCtx.state !== 'running') return;
-    const now = audioCtx.currentTime;
-
-    chordFreqs.forEach((freq) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now);
-
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(0.025, now + 1.8);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 5.5);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start(now);
-      osc.stop(now + 6);
-    });
-  }
-
-  playChord(chords[currentChordIndex]);
-  chordInterval = setInterval(() => {
-    currentChordIndex = (currentChordIndex + 1) % chords.length;
-    playChord(chords[currentChordIndex]);
-  }, 5000);
-}
-
-function stopAmbientSynth() {
-  if (chordInterval) {
-    clearInterval(chordInterval);
-    chordInterval = null;
-  }
 }
 
 function playSupernovaSound() {

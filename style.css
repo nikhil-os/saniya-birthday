@@ -354,27 +354,16 @@ body {
   100% { height: 14px; background: var(--star-gold); }
 }
 
-.custom-music-label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(18, 11, 38, 0.7);
-  border: 1px solid rgba(199, 125, 255, 0.3);
-  color: var(--theme-glow);
-  font-size: 0.9rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.audio-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+  transition: transform 0.25s ease;
 }
 
-.custom-music-label:hover {
-  background: var(--theme-purple);
-  color: #fff;
-  transform: scale(1.1);
+.audio-playing .audio-icon {
+  transform: scale(1.12);
 }
+
 
 /* ==========================================================
    MAIN WRAPPER & HERO SECTION (EXACT REFERENCE DESIGN)

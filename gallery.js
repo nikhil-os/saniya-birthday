@@ -50,6 +50,7 @@ async function initGalleryApp() {
   loadVaultStateFromURL();
   await loadVaultState();
   initTopNav();
+  initGalleryAudio();
   initSelectionBar();
   initDropdownMenu();
   initPasscodeModal();
@@ -952,3 +953,76 @@ function showToast(message) {
     toast.classList.remove('show');
   }, 2800);
 }
+
+/* ==========================================================
+   11. BACKGROUND AUDIO ENGINE (SENORITA ON LOOP - MUTE/UNMUTE ONLY)
+   ========================================================== */
+let wasGalleryAudioPlayingBeforeMedia = false;
+
+function initGalleryAudio() {
+  const bgAudio = document.getElementById('bg-audio');
+  const toggleBtn = document.getElementById('gallery-audio-toggle');
+  const audioIcon = document.getElementById('gallery-audio-icon');
+  const statusText = document.getElementById('gallery-audio-text');
+  if (!bgAudio || !toggleBtn) return;
+
+  bgAudio.loop = true;
+  bgAudio.volume = 0.75;
+
+  const isMutedPref = localStorage.getItem('saniya_music_muted') === 'true';
+
+  function updateAudioUI(isPlaying) {
+    if (isPlaying) {
+      if (audioIcon) audioIcon.textContent = '🔊';
+      if (statusText) statusText.textContent = 'Mute';
+      toggleBtn.classList.add('active-state');
+      toggleBtn.setAttribute('title', 'Mute background music');
+    } else {
+      if (audioIcon) audioIcon.textContent = '🔇';
+      if (statusText) statusText.textContent = 'Unmute';
+      toggleBtn.classList.remove('active-state');
+      toggleBtn.setAttribute('title', 'Unmute background music');
+    }
+  }
+
+  if (!isMutedPref) {
+    bgAudio.muted = false;
+    const playPromise = bgAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        updateAudioUI(true);
+      }).catch(() => {
+        updateAudioUI(false);
+        const startOnGesture = () => {
+          if (localStorage.getItem('saniya_music_muted') !== 'true') {
+            bgAudio.play().then(() => updateAudioUI(true)).catch(() => {});
+          }
+          window.removeEventListener('click', startOnGesture);
+          window.removeEventListener('touchstart', startOnGesture);
+        };
+        window.addEventListener('click', startOnGesture, { once: true });
+        window.addEventListener('touchstart', startOnGesture, { once: true });
+      });
+    }
+  } else {
+    bgAudio.muted = true;
+    updateAudioUI(false);
+  }
+
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (bgAudio.paused || bgAudio.muted) {
+      bgAudio.muted = false;
+      bgAudio.play().then(() => {
+        localStorage.setItem('saniya_music_muted', 'false');
+        updateAudioUI(true);
+      }).catch(() => {});
+    } else {
+      bgAudio.muted = true;
+      bgAudio.pause();
+      localStorage.setItem('saniya_music_muted', 'true');
+      updateAudioUI(false);
+    }
+  });
+}
+
