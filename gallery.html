@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Our Cosmic Gallery ✨ Saniya & Nikhil</title>
+  <meta name="description" content="A celestial square grid gallery of our photos and videos.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪐</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="gallery.css">
+</head>
+<body class="gallery-body">
+
+  <!-- Exact Video Starfield Background from Template (Infinite Loop) -->
+  <video class="stars stars-active" id="bg-stars-video" autoplay playsinline loop muted preload="auto" poster="poster.webp" aria-hidden="true">
+    <source media="(min-aspect-ratio: 1/1)" src="16x9.av1.webm" type="video/webm; codecs=&quot;av01.0.08M.08&quot;">
+    <source media="(min-aspect-ratio: 1/1)" src="16x9.av1.webm" type="video/webm">
+    <source media="(min-aspect-ratio: 1/1)" src="16x9.av1.webm" type="video/mp4">
+    <source src="16x9.av1.webm" type="video/webm; codecs=&quot;av01.0.08M.08&quot;">
+    <source src="16x9.av1.webm" type="video/webm">
+    <source src="16x9.av1.webm" type="video/mp4">
+  </video>
+
+  <!-- Ambient Nebulae Gradients from Reference Template -->
+  <div class="nebula" style="top: -10vw; left: -10vw; background: radial-gradient(circle, rgba(43, 43, 43, 0.2), transparent 70%);" aria-hidden="true"></div>
+  <div class="nebula" style="bottom: -10vw; right: -10vw; background: radial-gradient(circle, rgba(139, 92, 246, 0.2), transparent 70%);" aria-hidden="true"></div>
+
+  <!-- Cosmic Canvas for Twinkling Sparkles Overlay -->
+  <canvas id="cosmic-canvas" aria-hidden="true"></canvas>
+
+  <!-- TOP APP BAR -->
+  <header class="gallery-nav" id="top-nav">
+    <div class="nav-left">
+      <a href="index.html" class="back-home-btn" title="Return to Birthday Homepage">
+        <span class="back-arrow">←</span>
+        <span class="back-text">Saniya's Orbit</span>
+      </a>
+      
+      <!-- Vault Active Indicator -->
+      <span class="vault-active-pill" id="vault-mode-pill" style="display: none;">
+        🔒 Secret Vault
+      </span>
+    </div>
+
+    <div class="nav-right">
+      <!-- Select Mode Toggle Button -->
+      <button class="nav-btn select-mode-btn" id="toggle-select-btn" title="Select multiple items">
+        <span class="btn-icon">✓</span>
+        <span class="btn-text" id="select-btn-text">Select</span>
+      </button>
+
+      <!-- Three-Dots More Menu Button -->
+      <div class="dropdown-wrapper">
+        <button class="nav-btn more-dots-btn" id="three-dots-btn" aria-label="More options" title="More options">
+          <span>•••</span>
+        </button>
+
+        <div class="dropdown-menu" id="dropdown-menu">
+          <button class="dropdown-item" id="menu-view-more-btn">
+            <span class="item-icon">👁️</span>
+            <span>View More (Secret Media 🔐)</span>
+          </button>
+          <button class="dropdown-item" id="menu-hide-selected-btn" style="display: none;">
+            <span class="item-icon">🔒</span>
+            <span id="menu-hide-text">Hide Selected</span>
+          </button>
+          <button class="dropdown-item" id="menu-unhide-selected-btn" style="display: none;">
+            <span class="item-icon">🔓</span>
+            <span id="menu-unhide-text">Unhide Selected</span>
+          </button>
+          <button class="dropdown-item" id="menu-select-all-btn">
+            <span class="item-icon">☑️</span>
+            <span>Select All</span>
+          </button>
+          <button class="dropdown-item" id="menu-share-btn">
+            <span class="item-icon">🔗</span>
+            <span>Copy Cross-Device Link</span>
+          </button>
+          <button class="dropdown-item" id="menu-refresh-btn">
+            <span class="item-icon">🔄</span>
+            <span>Refresh Cloudinary</span>
+          </button>
+          <button class="dropdown-item danger-item" id="menu-exit-vault-btn" style="display: none;">
+            <span class="item-icon">🚪</span>
+            <span>Exit Secret Vault</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FLOATING SELECTION ACTION BAR (Appears when items are selected) -->
+  <aside class="selection-action-bar" id="selection-bar">
+    <div class="selection-info">
+      <span class="selection-count" id="selection-count-text">0 selected</span>
+    </div>
+    <div class="selection-actions">
+      <button class="action-pill-btn hide-action-btn" id="bar-hide-btn">
+        <span id="bar-action-icon">🔒</span>
+        <span id="bar-action-text">Hide</span>
+      </button>
+      <button class="action-pill-btn cancel-action-btn" id="bar-cancel-btn">
+        ✕ Cancel
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN GALLERY CONTAINER -->
+  <main class="gallery-container bento-section" id="bento-container">
+    <div class="gallery-header">
+      <div class="subtitle-badge" id="gallery-badge">
+        <span class="sparkle-icon">✦</span>
+        <span id="badge-label-text">ORBIT OF MEMORIES</span>
+        <span class="sparkle-icon">✦</span>
+      </div>
+      <h1 class="gallery-title glow-text" id="gallery-main-title">Constellations of Us</h1>
+      <p class="gallery-subtitle" id="gallery-subtitle-text">
+        "Every photograph is a frozen star, reminding us how beautiful our universe is together."
+      </p>
+
+      <!-- Vault Exit Button (when inside Secret Gallery) -->
+      <button class="glow-btn yes-btn exit-vault-banner-btn" id="banner-exit-vault-btn" style="display: none;">
+        ← Back to Main Public Gallery
+      </button>
+
+      <!-- FILTER TABS -->
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-pill active" data-filter="all">
+          <span>✨ All</span>
+          <span class="count-tag" id="count-all">0</span>
+        </button>
+        <button class="filter-pill" data-filter="image">
+          <span>📸 Photos</span>
+          <span class="count-tag" id="count-photos">0</span>
+        </button>
+        <button class="filter-pill" data-filter="video">
+          <span>🎥 Videos</span>
+          <span class="count-tag" id="count-videos">0</span>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- SQUARE GRID MEDIA GALLERY -->
+    <section class="media-grid" id="media-grid" aria-label="Media gallery">
+      <!-- Loading skeletons inserted by JavaScript -->
+    </section>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+      <div class="empty-icon" id="empty-icon">🪐</div>
+      <h3 id="empty-title">No Media Found</h3>
+      <p id="empty-desc">No photos or videos to show in this view.</p>
+    </div>
+  </main>
+
+  <!-- ==========================================================
+       MOBILE TOUCH & HOLD VIDEO PEEK POPUP (Instagram Style)
+       ========================================================== -->
+  <div class="video-peek-overlay" id="peek-overlay" aria-hidden="true">
+    <div class="video-peek-card" id="peek-card">
+      <video class="peek-video-player" id="peek-video-player" playsinline preload="auto" loop muted></video>
+      <div class="peek-controls-bar">
+        <span class="peek-status-pill">
+          <span class="peek-pulse"></span> HOLDING TO PEEK
+        </span>
+        <button class="peek-mute-toggle" id="peek-sound-toggle">🔊 Unmute</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       6-DIGIT PASSCODE SETUP & UNLOCK MODAL
+       ========================================================== -->
+  <div class="modal-backdrop" id="passcode-modal">
+    <div class="love-letter-card passcode-card">
+      <button class="close-modal-btn" id="close-passcode-btn" aria-label="Close passcode modal">✕</button>
+      
+      <div class="letter-stamp">
+        <span id="passcode-stamp">🔐 SECRET VAULT PIN</span>
+      </div>
+
+      <h2 class="letter-title" id="passcode-modal-title">Enter 6-Digit PIN</h2>
+      <p class="config-desc" id="passcode-modal-desc">
+        Enter your secret 6-digit passcode to unlock hidden media.
+      </p>
+
+      <div class="pin-inputs-row" id="pin-inputs-row">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="0" autofocus>
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="1">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="2">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="3">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="4">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="5">
+      </div>
+
+      <div class="pin-error-msg" id="pin-error-msg"></div>
+
+      <div class="form-actions" style="margin-top: 1.8rem;">
+        <button type="button" class="glow-btn yes-btn" id="submit-pin-btn">
+          ✨ Unlock Secret Vault ✨
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       MEDIA POPUP WINDOW (PC & MOBILE WITH ARROW NAVIGATION)
+       ========================================================== -->
+  <div class="lightbox-backdrop" id="lightbox-modal">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close popup window">✕</button>
+    <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous media">❮</button>
+    <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next media">❯</button>
+
+    <div class="lightbox-window-card" id="lightbox-window-card">
+      <div class="lightbox-content" id="lightbox-content">
+        <!-- Image or Video injected dynamically -->
+      </div>
+      <div class="lightbox-footer">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-popup" id="toast-popup"></div>
+
+  <script src="gsap.min.js"></script>
+  <script src="script.js"></script>
+  <script src="gallery.js"></script>
+</body>
+</html>

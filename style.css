@@ -1,0 +1,1639 @@
+/* ==========================================================
+   CELESTIAL SOLAR THEME - HAPPY BIRTHDAY SANIYA
+   Deep Cosmic Violet, Radiant Stars, Glowing Glassmorphism
+   ========================================================== */
+
+:root {
+  --bg-deep: #07030e;
+  --bg-space: #0d061c;
+  --theme-purple: #7b2cbf;
+  --theme-violet: #9d4edd;
+  --theme-magenta: #c77dff;
+  --theme-glow: #e0aaff;
+  --star-gold: #ffd166;
+  --text-main: #f8fafc;
+  --text-muted: #cbd5e1;
+  --glass-bg: rgba(15, 10, 32, 0.78);
+  --glass-border: rgba(199, 125, 255, 0.22);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(123, 44, 191, 0.2);
+  --font-cinzel: 'Cinzel', serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-cursive: 'Great Vibes', cursive;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0B0E14;
+  color: var(--text-main);
+  font-family: var(--font-montserrat);
+  line-height: 1.7;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ==========================================================
+   EXACT VIDEO BACKGROUND LAYER (INFINITE LOOP)
+   ========================================================== */
+.stars {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: #0B0E14;
+  transition: opacity 900ms linear;
+}
+
+.stars-active {
+  opacity: 1;
+}
+
+.stars-incoming {
+  z-index: 1;
+  opacity: 1;
+}
+
+/* Ambient Nebulae from Reference Code */
+.nebula {
+  position: fixed;
+  border-radius: 50%;
+  width: 60vw;
+  height: 60vw;
+  filter: blur(100px);
+  z-index: 1;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* Sparkles & Meteors Canvas Layer */
+#cosmic-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ==========================================================
+   TOP BAR & AUDIO CONTROLS
+   ========================================================== */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, rgba(7, 3, 14, 0.8) 0%, rgba(7, 3, 14, 0) 100%);
+}
+
+.solar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.4rem 1rem;
+  background: rgba(18, 11, 38, 0.7);
+  border: 1px solid rgba(199, 125, 255, 0.3);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--theme-glow);
+  box-shadow: 0 0 20px rgba(123, 44, 191, 0.3);
+}
+
+.orbit-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--star-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--star-gold), 0 0 20px var(--star-gold);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+
+.audio-widget {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ==========================================================
+   COSMIC DUAL VERSION TOGGLE SWITCH (EMOJI ONLY: 👧 & ⚠️)
+   ========================================================== */
+.version-toggle-container {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(18, 11, 38, 0.85);
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(199, 125, 255, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(123, 44, 191, 0.25);
+  backdrop-filter: blur(12px);
+  gap: 6px;
+  z-index: 10;
+}
+
+.version-toggle-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0.42rem 0.95rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+}
+
+.version-toggle-btn .toggle-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: transform 0.25s ease;
+}
+
+.version-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.version-toggle-btn.active {
+  background: linear-gradient(135deg, #7b2cbf, #c77dff);
+  box-shadow: 0 0 18px rgba(199, 125, 255, 0.65), inset 0 0 8px rgba(255, 255, 255, 0.3);
+  transform: scale(1.06);
+}
+
+.version-toggle-btn.active .toggle-icon {
+  transform: scale(1.15);
+}
+
+/* ==========================================================
+   6-DIGIT PASSCODE MODAL & PIN INPUTS
+   ========================================================== */
+.passcode-card {
+  max-width: 490px;
+  text-align: center;
+}
+
+.config-desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.pin-inputs-row {
+  display: flex;
+  justify-content: center;
+  gap: clamp(6px, 2vw, 10px);
+  margin: 1.5rem 0 1rem;
+  width: 100%;
+}
+
+.pin-digit {
+  width: clamp(36px, 11vw, 48px);
+  height: clamp(46px, 13vw, 56px);
+  border-radius: clamp(10px, 2.8vw, 14px);
+  background: rgba(7, 3, 14, 0.75);
+  border: 2px solid rgba(199, 125, 255, 0.35);
+  color: #fff;
+  font-family: var(--font-cinzel);
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.pin-digit:focus {
+  border-color: var(--star-gold);
+  box-shadow: 0 0 20px rgba(255, 209, 102, 0.4);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.pin-error-msg {
+  min-height: 22px;
+  font-size: 0.85rem;
+  color: #ff6b81;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  transition: opacity 0.2s ease;
+}
+
+.shake {
+  animation: shakeAnimation 0.4s ease-in-out;
+}
+
+@keyframes shakeAnimation {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* Toast popup */
+.toast-popup {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(18, 11, 38, 0.95);
+  border: 1px solid var(--theme-glow);
+  color: #fff;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(199, 125, 255, 0.4);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.toast-popup.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+.audio-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(18, 11, 38, 0.75);
+  border: 1px solid rgba(199, 125, 255, 0.35);
+  color: #fff;
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  font-family: var(--font-montserrat);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.audio-toggle-btn:hover {
+  background: rgba(45, 17, 85, 0.85);
+  border-color: var(--theme-glow);
+  box-shadow: 0 0 25px rgba(199, 125, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+/* Vinyl Galaxy Disc Animation */
+.music-disc {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 15%, #2a0845 40%, #110323 100%);
+  border: 1.5px solid var(--theme-glow);
+  position: relative;
+  transition: transform 0.5s linear;
+}
+
+.audio-playing .music-disc {
+  animation: spinDisc 3s linear infinite;
+}
+
+@keyframes spinDisc {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Equalizer sound bars */
+.sound-wave {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+
+.sound-wave .bar {
+  width: 3px;
+  background: var(--theme-glow);
+  border-radius: 2px;
+  height: 4px;
+  transition: height 0.2s ease;
+}
+
+.audio-playing .bar-1 { animation: soundWave 0.7s infinite alternate ease-in-out; }
+.audio-playing .bar-2 { animation: soundWave 0.5s infinite alternate ease-in-out 0.2s; }
+.audio-playing .bar-3 { animation: soundWave 0.9s infinite alternate ease-in-out 0.1s; }
+.audio-playing .bar-4 { animation: soundWave 0.6s infinite alternate ease-in-out 0.3s; }
+
+@keyframes soundWave {
+  0% { height: 3px; }
+  100% { height: 14px; background: var(--star-gold); }
+}
+
+.custom-music-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(18, 11, 38, 0.7);
+  border: 1px solid rgba(199, 125, 255, 0.3);
+  color: var(--theme-glow);
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-music-label:hover {
+  background: var(--theme-purple);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* ==========================================================
+   MAIN WRAPPER & HERO SECTION (EXACT REFERENCE DESIGN)
+   ========================================================== */
+.celestial-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 2rem 3rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.orbit-ring-decoration {
+  position: absolute;
+  width: min(85vw, 650px);
+  height: min(85vw, 650px);
+  border: 1px dashed rgba(199, 125, 255, 0.18);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: slowOrbit 60s linear infinite;
+  box-shadow: 0 0 80px rgba(123, 44, 191, 0.08);
+}
+
+@keyframes slowOrbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.subtitle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-montserrat);
+  font-size: clamp(0.75rem, 1.8vw, 1.15rem);
+  text-transform: uppercase;
+  letter-spacing: 0.38em;
+  color: #ffffff;
+  padding: 0.6rem 1.6rem;
+  background: rgba(7, 3, 14, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  margin-bottom: 1.8rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(199, 125, 255, 0.2);
+  animation: fadeInDown 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sparkle-icon {
+  color: var(--star-gold);
+  font-size: 0.9em;
+  text-shadow: 0 0 10px var(--star-gold);
+}
+
+.hero-title {
+  font-family: var(--font-cinzel);
+  font-size: clamp(3.2rem, 13vw, 7.5rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  line-height: 1.08;
+  text-shadow: 
+    0 0 25px rgba(255, 255, 255, 0.6),
+    0 0 50px rgba(199, 125, 255, 0.5),
+    0 0 80px rgba(123, 44, 191, 0.4);
+  transition: all 0.3s ease;
+  cursor: default;
+  user-select: text;
+  outline: none;
+  border-radius: 8px;
+  padding: 0 0.5rem;
+}
+
+.from-badge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.from-badge {
+  font-family: var(--font-cinzel);
+  font-size: clamp(0.95rem, 2.5vw, 1.6rem);
+  letter-spacing: 0.22em;
+  color: #ffffff;
+  padding: 0.6rem 1.8rem;
+  background: rgba(7, 3, 14, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(123, 44, 191, 0.25);
+  cursor: default;
+}
+
+.from-badge strong {
+  color: var(--theme-glow);
+  font-weight: 600;
+  outline: none;
+  cursor: default;
+}
+
+.hero-quick-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 11, 38, 0.7);
+  border: 1px dashed rgba(199, 125, 255, 0.45);
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  color: var(--theme-glow);
+  font-family: var(--font-montserrat);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.quick-toggle-btn:hover {
+  background: rgba(123, 44, 191, 0.4);
+  border-color: var(--star-gold);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(199, 125, 255, 0.45);
+}
+
+.quick-toggle-indicator {
+  color: var(--star-gold);
+  font-size: 0.85rem;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+.hero-quote {
+  max-width: 650px;
+  font-size: clamp(0.95rem, 2vw, 1.25rem);
+  font-weight: 300;
+  color: rgba(248, 250, 252, 0.9);
+  font-style: italic;
+  margin-bottom: 4rem;
+  padding: 0 1rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.scroll-hint-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  animation: bounceHint 2.4s infinite ease-in-out;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.scroll-hint:hover {
+  color: var(--theme-glow);
+}
+
+.chevron-down {
+  animation: floatChevron 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes bounceHint {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+  60% { transform: translateY(-4px); }
+}
+
+@keyframes floatChevron {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(5px); }
+}
+
+/* ==========================================================
+   CONTENT WRAPPER & GLASS CARDS
+   ========================================================== */
+.content-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 6rem;
+}
+
+.glass-section {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  padding: clamp(2rem, 5vw, 4.2rem);
+  margin-bottom: 4.5rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--glass-shadow);
+  text-align: center;
+  position: relative;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease, box-shadow 0.4s ease;
+}
+
+.glass-section:hover {
+  border-color: rgba(199, 125, 255, 0.4);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 50px rgba(157, 78, 221, 0.25);
+}
+
+.section-decor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 1.2rem;
+  opacity: 0.8;
+}
+
+.decor-line {
+  display: inline-block;
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--theme-glow), transparent);
+}
+
+.decor-star {
+  font-size: 1.1rem;
+  color: var(--star-gold);
+  text-shadow: 0 0 10px var(--star-gold);
+}
+
+.section-title {
+  font-family: var(--font-cinzel);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1.6rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.3), 0 0 45px rgba(157, 78, 221, 0.4);
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: var(--theme-glow);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+  opacity: 0.85;
+}
+
+.section-text {
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  line-height: 1.85;
+  color: #f1f5f9;
+  margin-bottom: 1.6rem;
+  font-weight: 300;
+  outline: none;
+}
+
+.section-text:focus {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.highlight-text {
+  color: #fff;
+  font-weight: 400;
+}
+
+.romantic-quote {
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.7vw, 1.45rem);
+  color: var(--theme-glow);
+  text-shadow: 0 0 15px rgba(199, 125, 255, 0.3);
+  padding: 1rem;
+  border-left: 2px solid var(--theme-magenta);
+  border-right: 2px solid var(--theme-magenta);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  margin: 2rem 0 1rem;
+}
+
+/* Solar Stats Grid */
+.solar-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.2rem;
+  margin-top: 2.5rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(199, 125, 255, 0.18);
+  border-radius: 16px;
+  padding: 1.4rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  background: rgba(123, 44, 191, 0.15);
+  transform: translateY(-4px);
+  border-color: var(--theme-magenta);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.stat-number {
+  font-family: var(--font-cinzel);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--theme-glow);
+  text-shadow: 0 0 15px rgba(199, 125, 255, 0.5);
+  margin-bottom: 0.3rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   PARALLAX PHOTO BOXES (WITH UPLOAD CAPABILITY)
+   ========================================================== */
+.parallax-photo-box {
+  width: 100%;
+  margin-bottom: 5rem;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(123, 44, 191, 0.25);
+  border: 1px solid rgba(199, 125, 255, 0.25);
+  background: #090314;
+  position: relative;
+  transition: transform 0.5s ease;
+}
+
+.parallax-photo-box:hover {
+  transform: translateY(-4px);
+  border-color: rgba(199, 125, 255, 0.5);
+}
+
+.photo-frame {
+  position: relative;
+  width: 100%;
+  height: clamp(340px, 50vh, 520px);
+  overflow: hidden;
+}
+
+.journey-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: brightness(0.95) contrast(1.05);
+}
+
+.photo-frame:hover .journey-photo {
+  transform: scale(1.04);
+}
+
+.photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(7, 3, 14, 0.88) 0%, rgba(7, 3, 14, 0.2) 50%, rgba(7, 3, 14, 0.5) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+}
+
+.photo-tag {
+  display: inline-block;
+  background: rgba(123, 44, 191, 0.6);
+  border: 1px solid rgba(199, 125, 255, 0.4);
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 0.8rem;
+  backdrop-filter: blur(8px);
+}
+
+.photo-caption {
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  font-style: italic;
+  color: #ffffff;
+  max-width: 600px;
+  margin-bottom: 1.2rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.photo-replace-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(7, 3, 14, 0.7);
+  border: 1px dashed rgba(199, 125, 255, 0.4);
+  color: var(--text-muted);
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(6px);
+}
+
+.photo-replace-btn:hover {
+  background: rgba(123, 44, 191, 0.75);
+  color: #ffffff;
+  border-style: solid;
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+.gallery-link-btn {
+  text-decoration: none;
+  background: linear-gradient(135deg, rgba(123, 44, 191, 0.7) 0%, rgba(157, 78, 221, 0.8) 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
+}
+
+.gallery-link-btn:hover {
+  background: linear-gradient(135deg, #7b2cbf 0%, #c77dff 100%);
+  color: #ffffff;
+  border-color: #ffffff;
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 0 35px rgba(199, 125, 255, 0.7);
+}
+
+/* ==========================================================
+   CONSTELLATIONS LIST
+   ========================================================== */
+.constellation-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  text-align: left;
+}
+
+.constellation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(199, 125, 255, 0.12);
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  line-height: 1.7;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.constellation-item:hover {
+  background: rgba(123, 44, 191, 0.12);
+  border-color: rgba(199, 125, 255, 0.35);
+  transform: translateX(6px);
+}
+
+.bullet-star {
+  color: var(--star-gold);
+  font-size: 1.3rem;
+  line-height: 1.2;
+  text-shadow: 0 0 10px var(--star-gold);
+}
+
+.item-content strong {
+  color: var(--theme-glow);
+  font-weight: 600;
+}
+
+/* ==========================================================
+   COSMIC TIMELINE
+   ========================================================== */
+.timeline {
+  position: relative;
+  max-width: 650px;
+  margin: 2.5rem auto 1rem;
+  text-align: left;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 6px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--star-gold), var(--theme-magenta), var(--theme-purple));
+  box-shadow: 0 0 10px var(--theme-magenta);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2.2rem;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -2rem;
+  top: 5px;
+  width: 14px;
+  height: 14px;
+  background: var(--star-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--star-gold), 0 0 20px var(--theme-magenta);
+  transform: translateX(-5px);
+}
+
+.timeline-content {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(199, 125, 255, 0.15);
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  backdrop-filter: blur(10px);
+}
+
+.timeline-phase {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--theme-glow);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.timeline-content h3 {
+  font-family: var(--font-cinzel);
+  font-size: 1.25rem;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.timeline-content p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ==========================================================
+   SECTION 5: CUTE IRRITATING LOVE BUTTONS & QUESTION!
+   ========================================================== */
+.interactive-quiz-section {
+  border-color: rgba(199, 125, 255, 0.4);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 60px rgba(199, 125, 255, 0.2);
+  margin-top: 5rem;
+  overflow: visible;
+}
+
+.quiz-heading {
+  font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+}
+
+.quiz-question {
+  font-family: var(--font-cinzel);
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px var(--theme-magenta);
+}
+
+.quiz-hint {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+  font-style: italic;
+  min-height: 28px;
+  transition: color 0.3s ease;
+}
+
+/* Playground area for the buttons */
+.button-playground {
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0 2.5rem;
+  border-radius: 20px;
+  border: 1px dashed rgba(199, 125, 255, 0.25);
+  padding: 2.2rem 1.5rem;
+  background: rgba(7, 3, 14, 0.45);
+  overflow: hidden;
+}
+
+.buttons-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.8rem;
+  width: 100%;
+  position: relative;
+}
+
+/* Glowing Buttons Base - Compact, Refined Sizing */
+.glow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.72rem 1.6rem;
+  border-radius: 999px;
+  font-family: var(--font-cinzel);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-transform: uppercase;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+}
+
+/* YES BUTTON: Radiantly Glowing */
+.yes-btn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(224, 170, 255, 0.9) 100%);
+  color: #120424;
+  border: 2px solid #ffffff;
+  padding: 0.75rem 1.8rem;
+  font-size: 0.96rem;
+  box-shadow: 
+    0 0 18px rgba(255, 255, 255, 0.5),
+    0 0 35px rgba(199, 125, 255, 0.4);
+}
+
+.yes-btn:hover {
+  background: #ffffff;
+  color: #07030e;
+  transform: scale(1.06);
+  box-shadow: 
+    0 0 30px rgba(255, 255, 255, 0.9),
+    0 0 60px rgba(199, 125, 255, 0.8),
+    0 0 90px var(--theme-purple);
+}
+
+.btn-sparkle {
+  color: var(--star-gold);
+  animation: spinSparkle 3s linear infinite;
+}
+
+@keyframes spinSparkle {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.3) rotate(180deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+
+/* NO BUTTON: Playful, Compact & Slippery */
+.no-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  padding: 0.65rem 1.4rem;
+  font-size: 0.88rem;
+  touch-action: none;
+  transition: left 0.16s cubic-bezier(0.16, 1, 0.3, 1), top 0.16s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease, background 0.2s ease;
+  z-index: 10;
+}
+
+.no-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* Tease Speech Bubble */
+.tease-bubble {
+  position: absolute;
+  top: 10px;
+  background: rgba(247, 37, 133, 0.9);
+  color: #fff;
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(247, 37, 133, 0.5);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.9);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 20;
+}
+
+.tease-bubble.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Unwrap Gift Button Area */
+.gift-section-wrapper {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(199, 125, 255, 0.15);
+}
+
+.gift-subtext {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+}
+
+.gift-btn {
+  background: rgba(123, 44, 191, 0.4);
+  border: 1px solid var(--theme-magenta);
+  color: #fff;
+  font-size: 1rem;
+  padding: 1rem 2.2rem;
+  box-shadow: 0 0 25px rgba(123, 44, 191, 0.3);
+}
+
+.gift-btn:hover {
+  background: var(--theme-purple);
+  box-shadow: 0 0 40px rgba(199, 125, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+.celestial-footer {
+  text-align: center;
+  padding: 4rem 1.5rem 3rem;
+  position: relative;
+  z-index: 10;
+  background: linear-gradient(0deg, rgba(7, 3, 14, 0.95) 0%, rgba(7, 3, 14, 0) 100%);
+  color: var(--text-muted);
+}
+
+.footer-constellation {
+  font-size: 1.4rem;
+  color: var(--theme-glow);
+  letter-spacing: 0.8rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 15px var(--theme-magenta);
+}
+
+.celestial-footer strong {
+  color: #fff;
+}
+
+.footer-sub {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-top: 0.4rem;
+}
+
+/* ==========================================================
+   SUPERNOVA FIREWORKS & EXPLOSION OVERLAY
+   ========================================================== */
+.supernova-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease;
+}
+
+.supernova-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.supernova-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, #ffffff 0%, rgba(224, 170, 255, 0.8) 40%, rgba(123, 44, 191, 0) 100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.supernova-flash.flash-now {
+  animation: supernovaFlash 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes supernovaFlash {
+  0% { opacity: 0; }
+  15% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.2); }
+}
+
+#fireworks-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ==========================================================
+   LOVE LETTER MODAL
+   ========================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 1, 10, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.love-letter-card {
+  position: relative;
+  max-width: 620px;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(25, 14, 48, 0.95) 0%, rgba(12, 6, 26, 0.95) 100%);
+  border: 1px solid rgba(199, 125, 255, 0.4);
+  border-radius: 28px;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 60px rgba(199, 125, 255, 0.3);
+  transform: translateY(30px) scale(0.95);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-backdrop.open .love-letter-card {
+  transform: translateY(0) scale(1);
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-modal-btn:hover {
+  background: rgba(247, 37, 133, 0.8);
+  transform: rotate(90deg);
+}
+
+.letter-stamp {
+  display: inline-block;
+  background: rgba(123, 44, 191, 0.5);
+  border: 1px dashed var(--theme-glow);
+  padding: 0.35rem 1rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--star-gold);
+  margin-bottom: 1.2rem;
+}
+
+.letter-title {
+  font-family: var(--font-cinzel);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  color: #fff;
+  margin-bottom: 1.4rem;
+  text-shadow: 0 0 20px rgba(199, 125, 255, 0.5);
+}
+
+.letter-body {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: #f1f5f9;
+}
+
+.letter-body p {
+  margin-bottom: 1.2rem;
+}
+
+.letter-shayari,
+.letter-bestie-quote {
+  background: rgba(123, 44, 191, 0.2);
+  border-left: 3px solid var(--theme-glow);
+  padding: 0.9rem 1.2rem;
+  margin: 1.2rem 0;
+  border-radius: 0 12px 12px 0;
+  font-style: italic;
+  color: #fae8ff;
+  line-height: 1.8;
+  box-shadow: inset 0 0 15px rgba(123, 44, 191, 0.15);
+}
+
+.letter-signature {
+  margin-top: 1.8rem;
+  font-family: var(--font-cursive);
+  font-size: 2rem;
+  color: var(--theme-glow);
+  line-height: 1.2;
+}
+
+.signature-name {
+  font-size: 2.2rem;
+  color: #fff;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.letter-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* ==========================================================
+   DYNAMIC VERSION TRANSITION SMOOTHNESS
+   ========================================================== */
+.version-transitioning {
+  opacity: 0.15 !important;
+  transform: translateY(8px) !important;
+  transition: opacity 0.22s ease, transform 0.22s ease !important;
+}
+
+#main-content {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* ==========================================================
+   SCROLL REVEAL ANIMATIONS
+   ========================================================== */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ========================================================== */
+/* ==========================================================
+   RESPONSIVE DESIGN (MOBILE, TABLET & COMPACT SCREENS)
+   ========================================================== */
+@media (max-width: 768px) {
+  .top-nav {
+    padding: 0.5rem 0.8rem;
+    gap: 8px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  
+  .badge-text {
+    display: none;
+  }
+  
+  .solar-badge {
+    padding: 0.35rem 0.55rem;
+  }
+
+  .version-toggle-container {
+    order: unset;
+    width: auto;
+    margin-top: 0;
+    padding: 2px 4px;
+    gap: 4px;
+  }
+
+  .version-toggle-btn {
+    flex: unset;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .version-toggle-btn .toggle-icon {
+    font-size: 1.1rem;
+  }
+
+  .content-wrapper {
+    padding: 1.5rem 0.8rem 4rem;
+  }
+
+  .glass-section {
+    padding: 2rem 1.1rem;
+    margin-bottom: 2.5rem;
+    border-radius: 18px;
+  }
+
+  .timeline {
+    padding-left: 1.5rem;
+    margin: 2rem auto 0.5rem;
+  }
+
+  .timeline::before {
+    left: 4px;
+  }
+
+  .timeline-dot {
+    left: -1.5rem;
+    transform: translateX(-4px);
+    width: 12px;
+    height: 12px;
+  }
+
+  .timeline-content {
+    padding: 1rem 1.1rem;
+  }
+
+  .buttons-row {
+    gap: 1.2rem;
+  }
+
+  .glow-btn {
+    padding: 0.65rem 1.35rem;
+    font-size: 0.88rem;
+  }
+
+  .button-playground {
+    min-height: 240px;
+    padding: 1.6rem 0.8rem;
+  }
+
+  .parallax-photo-box {
+    margin-bottom: 3rem;
+    border-radius: 16px;
+  }
+  
+  .photo-frame {
+    height: 300px;
+  }
+
+  .photo-overlay {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 5rem 0.8rem 2.2rem;
+    min-height: 90vh;
+  }
+
+  .orbit-ring-decoration {
+    width: 88vw;
+    height: 88vw;
+  }
+
+  .hero-title {
+    font-size: clamp(2.2rem, 10.5vw, 3.8rem);
+    letter-spacing: 0.03em;
+    word-break: normal;
+    hyphens: manual;
+    margin-bottom: 1.2rem;
+  }
+
+  .subtitle-badge {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    padding: 0.4rem 0.85rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .from-badge {
+    font-size: 0.84rem;
+    padding: 0.4rem 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  .audio-label {
+    display: none;
+  }
+
+  .audio-toggle-btn {
+    padding: 0.4rem 0.65rem;
+    gap: 6px;
+  }
+
+  .music-disc {
+    width: 24px;
+    height: 24px;
+  }
+
+  .disc-groove {
+    width: 14px;
+    height: 14px;
+  }
+
+  .disc-core {
+    width: 6px;
+    height: 6px;
+  }
+
+  .solar-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 1.8rem;
+  }
+
+  .stat-card {
+    padding: 1rem 0.65rem;
+    border-radius: 12px;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .romantic-quote {
+    font-size: 1.05rem;
+    padding: 0.8rem;
+    margin: 1.4rem 0 0.8rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 6vw, 2.3rem);
+    margin-bottom: 1.2rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .glow-btn {
+    padding: 0.58rem 1.15rem;
+    font-size: 0.82rem;
+  }
+
+  .buttons-row {
+    flex-direction: row;
+    gap: 0.8rem;
+    justify-content: center;
+  }
+
+  .button-playground {
+    min-height: 250px;
+    padding: 1.4rem 0.5rem;
+    border-radius: 14px;
+  }
+
+  .tease-bubble {
+    font-size: 0.78rem;
+    padding: 0.4rem 0.9rem;
+  }
+
+  .passcode-card {
+    padding: 1.8rem 1rem !important;
+  }
+
+  .modal-backdrop {
+    padding: 0.8rem;
+  }
+
+  .love-letter-card {
+    padding: 1.8rem 1.1rem;
+    border-radius: 20px;
+  }
+
+  .letter-title {
+    font-size: 1.6rem;
+  }
+
+  .letter-body {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .signature-name {
+    font-size: 1.8rem;
+  }
+
+  .celestial-footer {
+    padding: 3rem 1rem 2rem;
+  }
+
+  .footer-constellation {
+    letter-spacing: 0.4rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .top-nav {
+    padding: 0.4rem 0.5rem;
+    gap: 4px;
+  }
+
+  .solar-badge {
+    padding: 0.3rem 0.45rem;
+  }
+
+  .hero-title {
+    font-size: 1.95rem;
+  }
+
+  .solar-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pin-digit {
+    width: 34px;
+    height: 44px;
+    font-size: 1.15rem;
+    border-radius: 8px;
+  }
+
+  .pin-inputs-row {
+    gap: 5px;
+  }
+
+  .glow-btn {
+    padding: 0.52rem 0.95rem;
+    font-size: 0.78rem;
+  }
+}
+

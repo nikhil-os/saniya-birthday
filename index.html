@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Saniya ✨ Cosmic Solar Celebration</title>
+  <meta name="description" content="A cosmic celestial birthday celebration for Saniya. Orbiting love and wishes through the cosmos.">
+  
+  <!-- Google Fonts: Cinzel for celestial elegance, Montserrat for sleek readability, Great Vibes for cursive touches -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Great+Vibes&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Exact Video Starfield Background from Template (Infinite Loop) -->
+  <video class="stars stars-active" id="bg-stars-video" autoplay playsinline loop muted preload="auto" poster="poster.webp" aria-hidden="true">
+    <source media="(min-aspect-ratio: 1/1)" src="16x9.av1.webm" type="video/webm; codecs=&quot;av01.0.08M.08&quot;">
+    <source media="(min-aspect-ratio: 1/1)" src="16x9.av1.webm" type="video/webm">
+    <source media="(min-aspect-ratio: 1/1)" src="16x9.av1.webm" type="video/mp4">
+    <source src="16x9.av1.webm" type="video/webm; codecs=&quot;av01.0.08M.08&quot;">
+    <source src="16x9.av1.webm" type="video/webm">
+    <source src="16x9.av1.webm" type="video/mp4">
+  </video>
+
+  <!-- Ambient Nebulae Gradients from Reference Template -->
+  <div class="nebula" style="top: -10vw; left: -10vw; background: radial-gradient(circle, rgba(43, 43, 43, 0.2), transparent 70%);" aria-hidden="true"></div>
+  <div class="nebula" style="bottom: -10vw; right: -10vw; background: radial-gradient(circle, rgba(139, 92, 246, 0.2), transparent 70%);" aria-hidden="true"></div>
+
+  <!-- Cosmic Canvas for Twinkling Sparkles & Meteors Overlay -->
+  <canvas id="cosmic-canvas" aria-hidden="true"></canvas>
+
+  <!-- Navigation Bar with Audio and Mode Toggle -->
+  <header class="top-nav">
+    <div class="solar-badge">
+      <span class="orbit-dot"></span>
+      <span class="badge-text" id="badge-sender-text">ORBITING SINCE DAY ONE</span>
+    </div>
+
+    <!-- Dual Version Toggle Switch (Emoji Only: 👧 & ⚠️) -->
+    <div class="version-toggle-container" id="version-toggle" role="tablist" aria-label="Toggle Version Mode">
+      <button type="button" class="version-toggle-btn active" id="btn-toggle-sneha" data-version="sneha" role="tab" aria-selected="true" title="Birthday Wishes Mode 👧">
+        <span class="toggle-icon">👧</span>
+      </button>
+      <button type="button" class="version-toggle-btn" id="btn-toggle-nikhil" data-version="nikhil" role="tab" aria-selected="false" title="Danger Mode ⚠️ (Locked)">
+        <span class="toggle-icon">⚠️</span>
+      </button>
+    </div>
+
+    <!-- Audio Player Floating Widget -->
+    <div class="audio-widget" id="audio-widget">
+      <button class="audio-toggle-btn" id="audio-toggle" aria-label="Toggle ambient celestial music" title="Toggle Celestial Sound">
+        <div class="music-disc" id="music-disc">
+          <span class="disc-core"></span>
+          <span class="disc-groove"></span>
+        </div>
+        <div class="sound-wave" id="sound-wave">
+          <span class="bar bar-1"></span>
+          <span class="bar bar-2"></span>
+          <span class="bar bar-3"></span>
+          <span class="bar bar-4"></span>
+        </div>
+        <span class="audio-label" id="audio-status-text">Play Soft Music 🎵</span>
+      </button>
+      
+      <!-- Optional Local File Upload for Custom Song -->
+      <label class="custom-music-label" title="Upload your own song">
+        <input type="file" id="custom-music-input" accept="audio/*" style="display:none;">
+        <span class="upload-icon">♪+</span>
+      </label>
+    </div>
+  </header>
+
+  <!-- Main Celestial Content Container -->
+  <main class="celestial-container" id="main-content">
+
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <div class="orbit-ring-decoration" aria-hidden="true"></div>
+      
+      <div class="subtitle-badge">
+        <span class="sparkle-icon">✦</span>
+        <span id="hero-sub-badge">SOLAR RETURN</span>
+        <span class="sparkle-icon">✦</span>
+      </div>
+
+      <h1 class="hero-title glow-text" id="partner-name">
+        SANIYA
+      </h1>
+
+      <div class="from-badge-container">
+        <div class="from-badge">
+          <span>FROM </span>
+          <strong id="sender-name">SNEHA 🌸</strong>
+        </div>
+        <div class="hero-quick-toggle">
+          <button type="button" class="quick-toggle-btn" id="hero-quick-toggle-btn" title="Toggle Mode">
+            <span class="quick-toggle-indicator" id="hero-toggle-icon">🔒</span>
+            <span id="hero-quick-toggle-label">Enter Danger Mode ⚠️</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-quote" id="hero-quote">
+        "Arbon sitaron ki bheed mein bhi ye nigahein sirf tujhe dhoondhti hain... Kyunki meri poori kainat ka markaz sirf tum ho, meri jaan."
+      </div>
+
+      <a href="#story-1" class="scroll-hint-link">
+        <div class="scroll-hint">
+          <span>SCROLL DOWN</span>
+          <svg class="chevron-down" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </a>
+    </section>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+      <!-- SECTION 1: A Star Is Born -->
+      <section class="glass-section reveal-on-scroll" id="story-1">
+        <div class="section-decor">
+          <span class="decor-line"></span>
+          <span class="decor-star">✦</span>
+          <span class="decor-line"></span>
+        </div>
+        <h2 class="section-title" id="sec1-title">A Star Is Born ✨ Kainat Ka Noor</h2>
+        
+        <p class="section-text" id="sec1-text1">
+          Jab tum is duniya mein aayi thi, toh shayad aasmaan ke taare bhi tham gaye the. Tum sirf paida nahi hui, balki andhere aalam mein noor banke chamki ho.
+        </p>
+        
+        <div class="section-text highlight-text" id="sec1-text2">
+          "Tere aane se mehki hai mere dil ki har ek gali,<br>
+          Tu chaand hai mera, aur main teri kashish.<br>
+          Sau janam bhi kam hain tere ishq ke safar ke liye,<br>
+          Kainat ki har subah bas tujhse hi shuru ho yehi hai meri khwahish."
+        </div>
+
+        <div class="solar-stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="stat-1-num">365</div>
+            <div class="stat-label" id="stat-1-label">Suraj Ka Har Din Tere Saath</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-2-num">∞</div>
+            <div class="stat-label" id="stat-2-label">Beintehaa Roohani Mohabbat</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-3-num">1 in 8B</div>
+            <div class="stat-label" id="stat-3-label">Meri Poori Kainat, Meri Saniya</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PARALLAX PHOTO 1: Stargazing -->
+      <div class="parallax-photo-box reveal-on-scroll">
+        <div class="photo-frame">
+          <img src="assets/memory1.jpg" alt="Under the purple galaxy together" class="journey-photo" id="photo-slot-1">
+          <div class="photo-overlay">
+            <span class="photo-tag" id="photo-1-tag">🪐 Constellation of Our Love</span>
+            <p class="photo-caption" id="photo-1-caption">"Haath thaam kar jab hum sitaron ko dekhte hain, lagta hai waqt wahin thehar gaya ho."</p>
+            <a href="gallery.html" class="photo-replace-btn gallery-link-btn" title="Open Our Cosmic Photo & Video Gallery">
+              ✨ Open Our Cosmic Memories Gallery ✨
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Your Gravity -->
+      <section class="glass-section reveal-on-scroll" id="story-2">
+        <div class="section-decor">
+          <span class="decor-line"></span>
+          <span class="decor-star">🪐</span>
+          <span class="decor-line"></span>
+        </div>
+        <h2 class="section-title" id="sec2-title">Your Gravity 🪐</h2>
+        
+        <p class="section-text" id="sec2-text1">
+          Scientists kehte hain gravity planets ko baandh kar rakhti hai. Par mere liye gravity tumhari wo pyari muskaan hai, jo mere bechain dil ko hamesha sukoon ke orbit mein kheench leti hai.
+        </p>
+        
+        <div class="section-text romantic-quote" id="sec2-quote">
+          "Chandni bhi feeki lagti hai tere noor ke aage,<br>
+          Sitaron ne sajda kiya hai tere aane ke baad.<br>
+          Ye jo dil dhadakta hai mera har ek pal,<br>
+          Kainat ki kasam, ghumta hai sirf tere hi gird har raat."
+        </div>
+      </section>
+
+      <!-- SECTION: Cosmic Timeline -->
+      <section class="glass-section reveal-on-scroll" id="journey-timeline">
+        <div class="section-decor">
+          <span class="decor-line"></span>
+          <span class="decor-star">🚀</span>
+          <span class="decor-line"></span>
+        </div>
+        <h2 class="section-title" id="sec4-title">Our Cosmic Timeline 🚀 Hamara Kahkashan Safar</h2>
+        <p class="section-subtitle" id="sec4-subtitle">A journey through spacetime</p>
+
+        <div class="timeline" id="timeline-list">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-phase">Chapter I</span>
+              <h3>The Cosmic Collision</h3>
+              <p>Kainat ne hamari manzilon ko aapas mein milaya, aur meri berang zindagi mein sitaron sa noor bhar gaya.</p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-phase">Chapter II</span>
+              <h3>Entering Each Other's Orbit</h3>
+              <p>Ek anjaan shakhs se meri subah ki pehli aur raat ki aakhri soch ban gayi. Tumhara saath meri taqat ban gaya.</p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-phase">Chapter III</span>
+              <h3>Today: Your Solar Return</h3>
+              <p>Celebrating the queen of my heart. Aaj ka ye din, ye fizayein, aur ye sitare sab sirf tumhare naam hain.</p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-phase">Chapter ∞</span>
+              <h3>To Infinity & Beyond</h3>
+              <p>Jab tak ye suraj, chaand aur aasmaan rahenge, mera har ek pal sirf tumhari mohabbat ke sahare chalega.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: THE CUTE IRRITATING LOVE BUTTONS & QUESTION! -->
+      <section class="glass-section interactive-quiz-section reveal-on-scroll" id="love-game">
+        <div class="section-decor">
+          <span class="decor-line"></span>
+          <span class="decor-star">💖</span>
+          <span class="decor-line"></span>
+        </div>
+
+        <h2 class="section-title quiz-heading" id="quiz-heading">One Crucial Cosmic Question...</h2>
+        <p class="quiz-question" id="quiz-question">"Do you love me, Saniya? 🪐💖"</p>
+        <p class="quiz-hint" id="game-status-hint">Soch samajh ke batana... poori kainat ki physics tumhare jawab pe tiki hai!</p>
+
+        <!-- Interactive Playground for Buttons -->
+        <div class="button-playground" id="playground">
+          <div class="buttons-row" id="buttons-container">
+            <button class="glow-btn yes-btn" id="yes-btn">
+              <span class="btn-sparkle">✨</span> <span id="yes-btn-text">HAAN, BEINTEHAA!</span> <span class="btn-sparkle">✨</span>
+            </button>
+            <button class="glow-btn no-btn" id="no-btn">
+              <span id="no-btn-text">NAHI 😜</span>
+            </button>
+          </div>
+          <div class="tease-bubble" id="tease-bubble"></div>
+        </div>
+      </section>
+
+    </div><!-- /content-wrapper -->
+
+    <!-- FOOTER -->
+    <footer class="celestial-footer">
+      <div class="footer-constellation">✦ ✧ ✦</div>
+      <p id="footer-note">Crafted with endless love & starlight for <strong>Saniya</strong> • Forever & Always, Nikhil ❤️</p>
+      <p class="footer-sub">Happy Birthday, Our Brightest Star • May your light shine forever across the cosmos 🌌</p>
+    </footer>
+
+  </main>
+
+  <!-- SUPERNOVA EXPLOSION OVERLAY -->
+  <div class="supernova-overlay" id="supernova-overlay" aria-hidden="true">
+    <div class="supernova-flash" id="supernova-flash"></div>
+    <canvas id="fireworks-canvas"></canvas>
+  </div>
+
+  <!-- VICTORY / LETTER MODAL -->
+  <div class="modal-backdrop" id="letter-modal">
+    <div class="love-letter-card">
+      <button class="close-modal-btn" id="close-modal" aria-label="Close modal">✕</button>
+      
+      <div class="letter-stamp">
+        <span id="letter-stamp-text">🪐 GALAXY OF NIKHIL & SANIYA</span>
+      </div>
+
+      <h2 class="letter-title" id="letter-title">To My Dearest Saniya ✨ (Meri Jaan)</h2>
+      
+      <div class="letter-body" id="letter-body">
+        <p><strong>Happy Birthday, meri jaan! 🎂❤️</strong></p>
+        <p>Aaj ka din mere liye saal ka sabse khoobsurat aur muqaddas din hai, kyunki aaj ke din meri poori duniya is zameen par aayi thi. Tum meri zindagi ka wo chamakta sitara ho jisne meri har andheri raat ko noor se bhar diya.</p>
+        <div class="letter-shayari">
+          <em>"Tere chehre ki muskaan se roshan hai jahan mera,<br>
+          Tere bina adhura hai har ek aashiyana mera.<br>
+          Tu jo paas ho toh har manzil aasaan lagti hai,<br>
+          Tujhse hi shuru aur tujhpe khatam hai fasaana mera."</em>
+        </div>
+        <p>Shukriya meri har baat ko bina bole samajhne ke liye, meri sabse badi taqat banne ke liye, aur mere har lamhe ko itna haseen banane ke liye. Dua hai ki tumhara ye naya solar return tumhari jholi mein dher saari khushiyan, bepanah sukoon aur kamyabi lekar aaye.</p>
+        <p>Main hamesha, har janam aur har galaxy mein, sirf tumhara hi rahunga.</p>
+        <p class="letter-signature">
+          Forever & Always Yours,<br>
+          <span class="signature-name">Nikhil ❤️</span>
+        </p>
+      </div>
+
+      <div class="letter-actions">
+        <button class="glow-btn yes-btn" id="replay-supernova-btn">
+          ✨ Replay Cosmic Fireworks ✨
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       6-DIGIT PASSCODE SETUP & UNLOCK MODAL (DANGER MODE & VAULT)
+       ========================================================== -->
+  <div class="modal-backdrop" id="passcode-modal">
+    <div class="love-letter-card passcode-card">
+      <button class="close-modal-btn" id="close-passcode-btn" aria-label="Close passcode modal">✕</button>
+      
+      <div class="letter-stamp">
+        <span id="passcode-stamp">⚠️ DANGER MODE LOCK</span>
+      </div>
+
+      <h2 class="letter-title" id="passcode-modal-title">Enter 6-Digit PIN</h2>
+      <p class="config-desc" id="passcode-modal-desc">
+        This section is locked. Enter your 6-digit passcode to proceed.
+      </p>
+
+      <div class="pin-inputs-row" id="pin-inputs-row">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="0" autofocus>
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="1">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="2">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="3">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="4">
+        <input type="password" inputmode="numeric" maxlength="1" class="pin-digit" data-index="5">
+      </div>
+
+      <div class="pin-error-msg" id="pin-error-msg"></div>
+
+      <div class="form-actions" style="margin-top: 1.8rem;">
+        <button type="button" class="glow-btn yes-btn" id="submit-pin-btn">
+          ✨ Unlock Danger Mode ⚠️ ✨
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION POPUP -->
+  <div class="toast-popup" id="toast-popup"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
