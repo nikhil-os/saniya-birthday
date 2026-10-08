@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function initGalleryApp() {
+  initBackgroundVideo();
+  initCosmicCanvas();
   loadVaultStateFromURL();
   await loadVaultState();
   initTopNav();
@@ -1024,5 +1026,66 @@ function initGalleryAudio() {
       updateAudioUI(false);
     }
   });
+}
+
+function initBackgroundVideo() {
+  const bgVideo = document.getElementById('bg-stars-video');
+  if (!bgVideo) return;
+  bgVideo.muted = true;
+  bgVideo.loop = true;
+  const p = bgVideo.play();
+  if (p !== undefined) {
+    p.catch(() => {
+      const handleUserGesture = () => {
+        bgVideo.play().catch(() => {});
+        window.removeEventListener('click', handleUserGesture);
+        window.removeEventListener('touchstart', handleUserGesture);
+      };
+      window.addEventListener('click', handleUserGesture, { once: true });
+      window.addEventListener('touchstart', handleUserGesture, { once: true });
+    });
+  }
+}
+
+function initCosmicCanvas() {
+  const canvas = document.getElementById('cosmic-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
+
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  const stars = [];
+  const starCount = Math.min(Math.floor((width * height) / 4500), 160);
+
+  for (let i = 0; i < starCount; i++) {
+    stars.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 1.5 + 0.4,
+      alpha: Math.random() * 0.8 + 0.2,
+      speed: Math.random() * 0.025 + 0.008,
+      angle: Math.random() * Math.PI * 2
+    });
+  }
+
+  function renderStars() {
+    ctx.clearRect(0, 0, width, height);
+    for (let i = 0; i < stars.length; i++) {
+      const s = stars[i];
+      s.angle += s.speed;
+      const a = s.alpha * (0.6 + 0.4 * Math.sin(s.angle));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(renderStars);
+  }
+  renderStars();
 }
 
